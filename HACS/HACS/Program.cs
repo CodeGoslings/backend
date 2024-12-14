@@ -1,5 +1,7 @@
 
 using HACS.Data;
+using HACS.Interfaces;
+using HACS.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace HACS
@@ -21,6 +23,9 @@ namespace HACS
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+            builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
 
             var app = builder.Build();
 
