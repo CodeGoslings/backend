@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HACS.Data;
 using HACS.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HACS.Controllers
 {
@@ -21,17 +22,17 @@ namespace HACS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var volunteers = _context.Volunteers.ToList()
-                .Select(v => v.ToVolunteerDto());
-            return Ok(volunteers);
+            var volunteers = await _context.Volunteers.ToListAsync();
+            var volunteersDto = volunteers.Select(v => v.ToVolunteerDto());
+            return Ok(volunteersDto);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var volunteer = _context.Volunteers.Find(id);
+            var volunteer = await _context.Volunteers.FindAsync(id);
 
             if (volunteer == null)
             {

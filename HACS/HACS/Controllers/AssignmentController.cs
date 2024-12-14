@@ -6,6 +6,7 @@ using HACS.Data;
 using HACS.Dtos.Assignment;
 using HACS.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HACS.Controllers
 {
@@ -20,17 +21,17 @@ namespace HACS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var assignments = _context.Assignments.ToList()
-            .Select(a => a.ToAssignmentDto());
-            return Ok(assignments);
+            var assignments = await _context.Assignments.ToListAsync();
+            var assignmentsDto = assignments.Select(a => a.ToAssignmentDto());
+            return Ok(assignmentsDto);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var assignment = _context.Assignments.Find(id);
+            var assignment = await _context.Assignments.FindAsync(id);
 
             if (assignment == null)
             {
@@ -40,17 +41,18 @@ namespace HACS.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateAssignmentRequestDto assignmentDto)
+        public async Task<IActionResult> Create([FromBody] CreateAssignmentRequestDto assignmentDto)
         {
             var assignmentModel = assignmentDto.ToAssignmentFromCreateDto();
-            _context.Assignments.Add(assignmentModel);
-            _context.SaveChanges();
+            await _context.Assignments.AddAsync(assignmentModel);
+            await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetById), new { id = assignmentModel.Id }, assignmentModel.ToAssignmentDto());
         }
         [HttpPut("{id}")]
-        public IActionResult Update([FromRoute] int id, [FromBody] UpdateAssignmentRequestDto updateDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAssignmentRequestDto updateDto)
         {
-            var assignmentModel = _context.Assignments.FirstOrDefault(x => x.Id == id);
+            var assignmentModel = await _context.Assignments.FirstOrDefaultAsync(x => x.Id == id);
             if (assignmentModel == null)
             {
                 return NotFound();
@@ -59,7 +61,7 @@ namespace HACS.Controllers
             assignmentModel.Description = updateDto.Description;
             assignmentModel.DueDate = updateDto.DueDate;
             assignmentModel.VolunteerId = updateDto.VolunteerId;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(assignmentModel.ToAssignmentDto());
         }
