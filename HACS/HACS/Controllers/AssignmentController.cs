@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HACS.Data;
+using HACS.Dtos.Assignment;
 using HACS.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +37,15 @@ namespace HACS.Controllers
                 return NotFound();
             }
             return Ok(assignment.ToAssignmentDto());
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] CreateAssignmentRequestDto assignmentDto)
+        {
+            var assignmentModel = assignmentDto.ToAssignmentFromCreateDto();
+            _context.Assignments.Add(assignmentModel);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetById), new { id = assignmentModel.Id }, assignmentModel.ToAssignmentDto());
         }
 
     }

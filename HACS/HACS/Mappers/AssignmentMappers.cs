@@ -15,7 +15,17 @@ namespace HACS.Mappers
             {
                 Id = assignmentModel.Id,
                 Description = assignmentModel.Description,
-                DueDate = assignmentModel.DueDate
+                DueDate = assignmentModel.DueDate,
+                VolunteerId = assignmentModel.VolunteerId
+            };
+        }
+        public static Assignment ToAssignmentFromCreateDto(this CreateAssignmentRequestDto createAssignmentRequestDto)
+        {
+            return new Assignment
+            {
+                Description = createAssignmentRequestDto.Description,
+                DueDate = createAssignmentRequestDto.DueDate,
+                VolunteerId = createAssignmentRequestDto.VolunteerId
             };
         }
     }
