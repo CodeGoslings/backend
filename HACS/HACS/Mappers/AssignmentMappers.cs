@@ -19,13 +19,22 @@ namespace HACS.Mappers
                 VolunteerId = assignmentModel.VolunteerId
             };
         }
-        public static Assignment ToAssignmentFromCreateDto(this CreateAssignmentDto createDto, int volunteerId)
+        public static Assignment ToAssignmentFromCreate(this CreateAssignmentDto createDto, int volunteerId)
         {
             return new Assignment
             {
                 Description = createDto.Description,
                 DueDate = createDto.DueDate,
                 VolunteerId = volunteerId
+            };
+        }
+        public static Assignment ToAssignmentFromUpdate(this UpdateAssignmentDto updateDto)
+        {
+            return new Assignment
+            {
+                Description = updateDto.Description,
+                DueDate = updateDto.DueDate,
+                VolunteerId = updateDto.VolunteerId
             };
         }
 

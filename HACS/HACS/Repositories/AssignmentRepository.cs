@@ -48,7 +48,7 @@ namespace HACS.Repositories
             return await _context.Assignments.FindAsync(id);
         }
 
-        public async Task<Assignment?> UpdateAsync(int id, UpdateAssignmentDto assignmentDto)
+        public async Task<Assignment?> UpdateAsync(int id, Assignment assignment)
         {
             var existingAssignment = await _context.Assignments.FirstOrDefaultAsync(x => x.Id == id);
             if (existingAssignment == null)
@@ -56,9 +56,9 @@ namespace HACS.Repositories
                 return null;
             }
 
-            existingAssignment.Description = assignmentDto.Description;
-            existingAssignment.DueDate = assignmentDto.DueDate;
-            existingAssignment.VolunteerId = assignmentDto.VolunteerId;
+            existingAssignment.Description = assignment.Description;
+            existingAssignment.DueDate = assignment.DueDate;
+            existingAssignment.VolunteerId = assignment.VolunteerId;
 
             await _context.SaveChangesAsync();
             return existingAssignment;

@@ -52,7 +52,7 @@ namespace HACS.Controllers
             {
                 return BadRequest("Volunteer does not exist");
             }
-            var assignmentModel = assignmentDto.ToAssignmentFromCreateDto(volunteerId);
+            var assignmentModel = assignmentDto.ToAssignmentFromCreate(volunteerId);
             await _assignmentRepo.CreateAsync(assignmentModel);
 
             return CreatedAtAction(nameof(GetById), new { id = assignmentModel.Id }, assignmentModel.ToAssignmentDto());
@@ -61,7 +61,7 @@ namespace HACS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAssignmentDto updateDto)
         {
-            var assignmentModel = await _assignmentRepo.UpdateAsync(id, updateDto);
+            var assignmentModel = await _assignmentRepo.UpdateAsync(id, updateDto.ToAssignmentFromUpdate());
 
             if (assignmentModel == null)
             {
