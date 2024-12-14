@@ -47,6 +47,22 @@ namespace HACS.Controllers
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetById), new { id = assignmentModel.Id }, assignmentModel.ToAssignmentDto());
         }
+        [HttpPut("{id}")]
+        public IActionResult Update([FromRoute] int id, [FromBody] UpdateAssignmentRequestDto updateDto)
+        {
+            var assignmentModel = _context.Assignments.FirstOrDefault(x => x.Id == id);
+            if (assignmentModel == null)
+            {
+                return NotFound();
+            }
+
+            assignmentModel.Description = updateDto.Description;
+            assignmentModel.DueDate = updateDto.DueDate;
+            assignmentModel.VolunteerId = updateDto.VolunteerId;
+            _context.SaveChanges();
+
+            return Ok(assignmentModel.ToAssignmentDto());
+        }
 
     }
 }
