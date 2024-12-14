@@ -28,12 +28,12 @@ namespace HACS.Repositories
 
         public async Task<List<Volunteer>> GetAllAsync()
         {
-            return await _context.Volunteers.ToListAsync();
+            return await _context.Volunteers.Include(x => x.Assignments).ToListAsync();
         }
 
         public async Task<Volunteer?> GetByIdAsync(int id)
         {
-            var volunteer = await _context.Volunteers.FirstOrDefaultAsync(x => x.Id == id);
+            var volunteer = await _context.Volunteers.Include(x => x.Assignments).FirstOrDefaultAsync(x => x.Id == id);
 
             if (volunteer == null)
             {

@@ -12,7 +12,7 @@ namespace HACS.Models
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public List<Assignment> Tasks { get; set; } = new List<Assignment>();
+        public List<Assignment> Assignments { get; set; } = new List<Assignment>();
 
     }
 }

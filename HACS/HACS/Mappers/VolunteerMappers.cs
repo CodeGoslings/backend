@@ -16,7 +16,8 @@ namespace HACS.Mappers
                 Id = volunteerModel.Id,
                 FirstName = volunteerModel.FirstName,
                 LastName = volunteerModel.LastName,
-                Email = volunteerModel.Email
+                Email = volunteerModel.Email,
+                Assignments = volunteerModel.Assignments.Select(x => x.ToAssignmentDto()).ToList()
             };
         }
     }
