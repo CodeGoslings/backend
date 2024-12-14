@@ -11,5 +11,6 @@ namespace HACS.Dtos.Assignment
         public string Description { get; set; } = string.Empty;
         public DateTime DueDate { get; set; }
         public AssignmentStatus Status { get; set; }
+        public int Rating { get; set; }
     }
 }

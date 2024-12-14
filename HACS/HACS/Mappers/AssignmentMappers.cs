@@ -17,6 +17,7 @@ namespace HACS.Mappers
                 Description = assignmentModel.Description,
                 DueDate = assignmentModel.DueDate,
                 Status = assignmentModel.Status,
+                Rating = assignmentModel.Rating,
                 VolunteerId = assignmentModel.VolunteerId
             };
         }
@@ -27,6 +28,7 @@ namespace HACS.Mappers
                 Description = createDto.Description,
                 DueDate = createDto.DueDate,
                 Status = createDto.Status,
+                Rating = createDto.Rating,
                 VolunteerId = volunteerId
             };
         }
@@ -37,6 +39,7 @@ namespace HACS.Mappers
                 Description = updateDto.Description,
                 DueDate = updateDto.DueDate,
                 Status = updateDto.Status,
+                Rating = updateDto.Rating,
                 VolunteerId = updateDto.VolunteerId
             };
         }

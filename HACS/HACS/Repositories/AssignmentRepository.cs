@@ -59,6 +59,7 @@ namespace HACS.Repositories
             existingAssignment.Description = assignment.Description;
             existingAssignment.DueDate = assignment.DueDate;
             existingAssignment.Status = assignment.Status;
+            existingAssignment.Rating = assignment.Rating;
             existingAssignment.VolunteerId = assignment.VolunteerId;
 
             await _context.SaveChangesAsync();

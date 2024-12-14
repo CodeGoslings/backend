@@ -11,6 +11,7 @@ namespace HACS.Models
         public string Description { get; set; } = string.Empty;
         public DateTime DueDate { get; set; }
         public AssignmentStatus Status { get; set; } = AssignmentStatus.NotStarted;
+        public int Rating { get; set; }
         public int VolunteerId { get; set; }
         public Volunteer Volunteer { get; set; } = null!;
     }
