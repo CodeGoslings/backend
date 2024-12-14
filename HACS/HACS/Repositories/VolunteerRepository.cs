@@ -26,6 +26,11 @@ namespace HACS.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<bool> ExistsAsync(int id)
+        {
+            return await _context.Volunteers.AnyAsync(x => x.Id == id);
+        }
+
         public async Task<List<Volunteer>> GetAllAsync()
         {
             return await _context.Volunteers.Include(x => x.Assignments).ToListAsync();

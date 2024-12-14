@@ -13,5 +13,6 @@ namespace HACS.Interfaces
         Task<Volunteer?> CreateAsync(Volunteer volunteer);
         Task<Volunteer?> UpdateAsync(int id, Volunteer volunteer);
         Task<Volunteer?> DeleteAsync(int id);
+        Task<bool> ExistsAsync(int id);
     }
 }

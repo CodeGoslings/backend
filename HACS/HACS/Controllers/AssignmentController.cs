@@ -16,17 +16,19 @@ namespace HACS.Controllers
     public class AssignmentController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        private readonly IAssignmentRepository _repository;
-        public AssignmentController(ApplicationDBContext context, IAssignmentRepository repository)
+        private readonly IAssignmentRepository _assignmentRepo;
+        private readonly IVolunteerRepository _volunteerRepo;
+        public AssignmentController(ApplicationDBContext context, IAssignmentRepository assignmentRepo, IVolunteerRepository volunteerRepo)
         {
             _context = context;
-            _repository = repository;
+            _assignmentRepo = assignmentRepo;
+            _volunteerRepo = volunteerRepo;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var assignments = await _repository.GetAllAsync();
+            var assignments = await _assignmentRepo.GetAllAsync();
             var assignmentsDto = assignments.Select(a => a.ToAssignmentDto());
             return Ok(assignmentsDto);
         }
@@ -34,7 +36,7 @@ namespace HACS.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var assignment = await _repository.GetByIdAsync(id);
+            var assignment = await _assignmentRepo.GetByIdAsync(id);
 
             if (assignment == null)
             {
@@ -43,19 +45,23 @@ namespace HACS.Controllers
             return Ok(assignment.ToAssignmentDto());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateAssignmentRequestDto assignmentDto)
+        [HttpPost("{volunteerId}")]
+        public async Task<IActionResult> Create([FromRoute] int volunteerId, [FromBody] CreateAssignmentDto assignmentDto)
         {
-            var assignmentModel = assignmentDto.ToAssignmentFromCreateDto();
-            await _repository.CreateAsync(assignmentModel);
+            if (!await _volunteerRepo.ExistsAsync(volunteerId))
+            {
+                return BadRequest("Volunteer does not exist");
+            }
+            var assignmentModel = assignmentDto.ToAssignmentFromCreateDto(volunteerId);
+            await _assignmentRepo.CreateAsync(assignmentModel);
 
             return CreatedAtAction(nameof(GetById), new { id = assignmentModel.Id }, assignmentModel.ToAssignmentDto());
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAssignmentRequestDto updateDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAssignmentDto updateDto)
         {
-            var assignmentModel = await _repository.UpdateAsync(id, updateDto);
+            var assignmentModel = await _assignmentRepo.UpdateAsync(id, updateDto);
 
             if (assignmentModel == null)
             {

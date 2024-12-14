@@ -12,7 +12,7 @@ namespace HACS.Interfaces
         Task<List<Assignment>> GetAllAsync();
         Task<Assignment?> GetByIdAsync(int id);
         Task<Assignment> CreateAsync(Assignment assignment);
-        Task<Assignment?> UpdateAsync(int id, UpdateAssignmentRequestDto assignmentDto);
+        Task<Assignment?> UpdateAsync(int id, UpdateAssignmentDto assignmentDto);
         Task<Assignment?> DeleteAsync(int id);
     }
 }

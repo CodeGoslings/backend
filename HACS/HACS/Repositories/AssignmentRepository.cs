@@ -48,7 +48,7 @@ namespace HACS.Repositories
             return await _context.Assignments.FindAsync(id);
         }
 
-        public async Task<Assignment?> UpdateAsync(int id, UpdateAssignmentRequestDto assignmentDto)
+        public async Task<Assignment?> UpdateAsync(int id, UpdateAssignmentDto assignmentDto)
         {
             var existingAssignment = await _context.Assignments.FirstOrDefaultAsync(x => x.Id == id);
             if (existingAssignment == null)

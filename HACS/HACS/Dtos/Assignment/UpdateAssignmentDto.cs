@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HACS.Dtos.Assignment
 {
-    public class UpdateAssignmentRequestDto
+    public class UpdateAssignmentDto
     {
 
         public string Description { get; set; } = string.Empty;
