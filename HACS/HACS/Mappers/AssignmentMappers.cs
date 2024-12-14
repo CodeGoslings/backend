@@ -16,6 +16,7 @@ namespace HACS.Mappers
                 Id = assignmentModel.Id,
                 Description = assignmentModel.Description,
                 DueDate = assignmentModel.DueDate,
+                Status = assignmentModel.Status,
                 VolunteerId = assignmentModel.VolunteerId
             };
         }
@@ -25,6 +26,7 @@ namespace HACS.Mappers
             {
                 Description = createDto.Description,
                 DueDate = createDto.DueDate,
+                Status = createDto.Status,
                 VolunteerId = volunteerId
             };
         }
@@ -34,6 +36,7 @@ namespace HACS.Mappers
             {
                 Description = updateDto.Description,
                 DueDate = updateDto.DueDate,
+                Status = updateDto.Status,
                 VolunteerId = updateDto.VolunteerId
             };
         }

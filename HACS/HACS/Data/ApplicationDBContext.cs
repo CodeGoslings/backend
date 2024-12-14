@@ -16,5 +16,13 @@ namespace HACS.Data
 
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Volunteer> Volunteers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<Assignment>()
+                .Property(a => a.Status)
+                .HasConversion<int>();
+        }
     }
 }
