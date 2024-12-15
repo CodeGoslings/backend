@@ -20,5 +20,18 @@ namespace HACS.Mappers
                 Assignments = volunteerModel.Assignments.Select(x => x.ToAssignmentDto()).ToList()
             };
         }
+
+        public static Volunteer ToVolunteerFromCreate(this CreateVolunteerDto volunteerDto) => new Volunteer
+        {
+            FirstName = volunteerDto.FirstName,
+            LastName = volunteerDto.LastName,
+            Email = volunteerDto.Email
+        };
+        public static Volunteer ToVolunteerFromUpdate(this UpdateVolunteerDto volunteerDto) => new Volunteer
+        {
+            FirstName = volunteerDto.FirstName,
+            LastName = volunteerDto.LastName,
+            Email = volunteerDto.Email
+        };
     }
 }

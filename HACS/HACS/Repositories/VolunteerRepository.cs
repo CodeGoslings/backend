@@ -16,14 +16,24 @@ namespace HACS.Repositories
         {
             _context = context;
         }
-        public Task<Volunteer?> CreateAsync(Volunteer volunteer)
+        public async Task<Volunteer?> CreateAsync(Volunteer volunteer)
         {
-            throw new NotImplementedException();
+            await _context.Volunteers.AddAsync(volunteer);
+            await _context.SaveChangesAsync();
+            return volunteer;
         }
 
-        public Task<Volunteer?> DeleteAsync(int id)
+        public async Task<Volunteer?> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var volunteer = await _context.Volunteers.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (volunteer == null)
+            {
+                return null;
+            }
+            _context.Volunteers.Remove(volunteer);
+            await _context.SaveChangesAsync();
+            return volunteer;
         }
 
         public async Task<bool> ExistsAsync(int id)
@@ -48,9 +58,20 @@ namespace HACS.Repositories
             return volunteer;
         }
 
-        public Task<Volunteer?> UpdateAsync(int id, Volunteer volunteer)
+        public async Task<Volunteer?> UpdateAsync(int id, Volunteer volunteer)
         {
-            throw new NotImplementedException();
+            var existingVolunteer = await _context.Volunteers.FirstOrDefaultAsync(x => x.Id == id);
+            if (existingVolunteer == null)
+            {
+                return null;
+            }
+
+            existingVolunteer.FirstName = volunteer.FirstName;
+            existingVolunteer.LastName = volunteer.LastName;
+            existingVolunteer.Email = volunteer.Email;
+
+            await _context.SaveChangesAsync();
+            return existingVolunteer;
         }
     }
 }

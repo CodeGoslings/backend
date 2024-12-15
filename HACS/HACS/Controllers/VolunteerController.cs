@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HACS.Data;
+using HACS.Dtos.Volunteer;
 using HACS.Interfaces;
 using HACS.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,41 @@ namespace HACS.Controllers
             return Ok(volunteer.ToVolunteerDto());
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateVolunteerDto volunteerDto)
+        {
+            var volunteerModel = volunteerDto.ToVolunteerFromCreate();
+            await _repository.CreateAsync(volunteerModel);
+
+            return CreatedAtAction(nameof(GetById), new { id = volunteerModel.Id }, volunteerModel.ToVolunteerDto());
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateVolunteerDto volunteerDto)
+        {
+            var volunteerModel = await _repository.UpdateAsync(id, volunteerDto.ToVolunteerFromUpdate());
+
+            if (volunteerModel == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(volunteerModel.ToVolunteerDto());
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var volunteer = await _repository.DeleteAsync(id);
+
+            if (volunteer == null)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
 
     }
 }
