@@ -16,6 +16,7 @@ namespace HACS.Data
 
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Volunteer> Volunteers { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
