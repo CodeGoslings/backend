@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace HACS.Models.DonorManagement;
 
@@ -14,6 +15,8 @@ public class User
     public string LastName { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
+    
+    protected User() {}
     
     protected User(string firstName, string lastName, string email, string password, string? secondName = null, Guid id = new())
     {

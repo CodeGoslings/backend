@@ -38,4 +38,11 @@ public class DonorController : ControllerBase
         }
         return Ok(donor);
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] Donor donor)
+    {
+        await _donorRepo.CreateAsync(donor);
+        return CreatedAtAction(nameof(GetById), new { id = donor.Id }, donor);
+    }
 }
