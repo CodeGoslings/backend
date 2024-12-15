@@ -59,8 +59,12 @@ namespace HACS
                 var path = Environment.GetFolderPath(folder);
                 var dbPath = Path.Join(path, "hacs.db");
 
-                options.UseSqlite($"Data Source={dbPath}");
+                options.UseSqlite(
+                    $"Data Source={dbPath}",
+                    x => x.UseNetTopologySuite()
+                );
             });
+
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {

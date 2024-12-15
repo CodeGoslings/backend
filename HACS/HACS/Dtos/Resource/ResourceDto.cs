@@ -12,5 +12,11 @@ namespace HACS.Dtos.Resource
         public float Amount { get; set; }
         public string Unit { get; set; }
         public int OrganizationId { get; set; }
+        public PointDto Location { get; set; }
+    }
+    public class PointDto
+    {
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
     }
 }

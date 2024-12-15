@@ -15,7 +15,8 @@ namespace HACS.Mappers
             Name = resource.Name,
             Amount = resource.Amount,
             Unit = resource.Unit,
-            OrganizationId = resource.OrganizationId
+            OrganizationId = resource.OrganizationId,
+            Location = new PointDto { Longitude = resource.Location.Coordinate.X, Latitude = resource.Location.Coordinate.Y }
         };
 
         public static Resource ToResourceFromCreate(this CreateResourceDto resourceDto) => new Resource
@@ -23,7 +24,8 @@ namespace HACS.Mappers
             Name = resourceDto.Name,
             Amount = resourceDto.Amount,
             Unit = resourceDto.Unit,
-            OrganizationId = resourceDto.OrganizationId
+            OrganizationId = resourceDto.OrganizationId,
+            Location = new NetTopologySuite.Geometries.Point(19.457216, 51.759445) { SRID = 4326 }
 
         };
         public static Resource ToResourceFromUpdate(this UpdateResourceDto resourceDto) => new Resource

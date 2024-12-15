@@ -45,6 +45,11 @@ namespace HACS.Data
                 .Entity<Assignment>()
                 .Property(a => a.Status)
                 .HasConversion<int>();
+
+            modelBuilder
+                .Entity<Resource>()
+                .Property(r => r.Location)
+                .HasSrid(4326);
         }
     }
 }
