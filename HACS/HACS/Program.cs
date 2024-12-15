@@ -30,12 +30,24 @@ namespace HACS
 
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                var folder = Environment.SpecialFolder.LocalApplicationData;
+                var path = Environment.GetFolderPath(folder);
+                var dbPath = Path.Join(path, "hacs.db");
+
+                options.UseSqlite($"Data Source={dbPath}");
             });
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
-                options.Password.RequireLowercase = true;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 1;
+                options.Password.RequiredUniqueChars = 1;
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedAccount = false;
             })
             .AddEntityFrameworkStores<ApplicationDBContext>()
             .AddDefaultTokenProviders();

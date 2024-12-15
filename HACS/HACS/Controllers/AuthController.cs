@@ -29,7 +29,7 @@ namespace HACS.Controllers
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError,
+                return StatusCode(StatusCodes.Status400BadRequest,
                     new { Status = "Error", Message = "User already exists!" });
 
             IdentityUser user = new()
@@ -41,8 +41,8 @@ namespace HACS.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { Status = "Error", Message = "User creation failed!" });
+                return StatusCode(StatusCodes.Status400BadRequest,
+                    new { Status = "Error", Message = "User creation failed!", Errors = result.Errors });
 
             return Ok(new { Status = "Success", Message = "User created successfully!" });
         }
