@@ -188,6 +188,28 @@ namespace HACS.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Resources",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Amount = table.Column<float>(type: "REAL", nullable: false),
+                    Unit = table.Column<string>(type: "TEXT", nullable: false),
+                    OrganizationId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Resources", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Resources_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Assignments",
                 columns: table => new
                 {
@@ -277,6 +299,11 @@ namespace HACS.Migrations
                 column: "VolunteerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Resources_OrganizationId",
+                table: "Resources",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VolunteerContracts_OrganizationId",
                 table: "VolunteerContracts",
                 column: "OrganizationId");
@@ -302,6 +329,9 @@ namespace HACS.Migrations
 
             migrationBuilder.DropTable(
                 name: "Assignments");
+
+            migrationBuilder.DropTable(
+                name: "Resources");
 
             migrationBuilder.DropTable(
                 name: "VolunteerContracts");

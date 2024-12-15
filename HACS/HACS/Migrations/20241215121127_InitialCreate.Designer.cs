@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HACS.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241215101643_InitialCreate")]
+    [Migration("20241215121127_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -74,6 +74,33 @@ namespace HACS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Organizations");
+                });
+
+            modelBuilder.Entity("HACS.Models.Resource", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<float>("Amount")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("Resources");
                 });
 
             modelBuilder.Entity("HACS.Models.Volunteer", b =>
@@ -317,6 +344,17 @@ namespace HACS.Migrations
                     b.Navigation("Volunteer");
                 });
 
+            modelBuilder.Entity("HACS.Models.Resource", b =>
+                {
+                    b.HasOne("HACS.Models.Organization", "Organization")
+                        .WithMany("Resources")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("HACS.Models.VolunteerContract", b =>
                 {
                     b.HasOne("HACS.Models.Organization", "Organization")
@@ -389,6 +427,8 @@ namespace HACS.Migrations
 
             modelBuilder.Entity("HACS.Models.Organization", b =>
                 {
+                    b.Navigation("Resources");
+
                     b.Navigation("VolunteerContracts");
                 });
 
