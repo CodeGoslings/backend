@@ -33,6 +33,7 @@ namespace HACS
             builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
             builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             builder.Services.AddScoped<IVolunteerContractRepository, VolunteerContractRepository>();
+            builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 
             var app = builder.Build();
 

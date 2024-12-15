@@ -15,5 +15,6 @@ namespace HACS.Models
         public string Website { get; set; } = string.Empty;
         public string VatIN { get; set; } = string.Empty;
         public List<VolunteerContract> VolunteerContracts { get; set; } = new List<VolunteerContract>();
+        public List<Resource> Resources { get; set; } = new List<Resource>();
     }
 }
