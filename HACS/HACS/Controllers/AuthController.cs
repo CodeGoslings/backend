@@ -1,4 +1,5 @@
 ﻿using HACS.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -69,6 +70,14 @@ namespace HACS.Controllers
                 });
             }
             return Unauthorized();
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("authorizedHelloWorld")]
+        public async Task<IActionResult> AuthorizedHelloWorld()
+        {
+            return Ok("You are authorized");
         }
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)
