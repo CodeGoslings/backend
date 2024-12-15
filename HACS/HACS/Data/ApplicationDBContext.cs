@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using HACS.Models;
+using HACS.Models.DonorManagement;
 using Microsoft.EntityFrameworkCore;
 
 namespace HACS.Data
@@ -16,7 +13,12 @@ namespace HACS.Data
 
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Volunteer> Volunteers { get; set; }
-
+        
+        public DbSet<User> Users { get; set; }
+        public DbSet<Donation> Donations { get; set; }
+        public DbSet<Donor> Donors { get; set; }
+        public DbSet<DonationAdmin> DonationAdmins { get; set; }
+            
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder

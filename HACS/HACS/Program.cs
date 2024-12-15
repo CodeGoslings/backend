@@ -1,7 +1,10 @@
 
 using HACS.Data;
 using HACS.Interfaces;
+using HACS.Interfaces.DonorManagement;
+using HACS.Models.DonorManagement;
 using HACS.Repositories;
+using HACS.Repositories.DonorManagement;
 using Microsoft.EntityFrameworkCore;
 
 namespace HACS
@@ -26,11 +29,16 @@ namespace HACS
 
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=hacs;Trusted_Connection=True;TrustServerCertificate=True");
             });
 
             builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
             builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+            
+            builder.Services.AddScoped<IRepository<Donation>, DonationRepository>();
+            builder.Services.AddScoped<IRepository<Donor>, DonorRepository>();
+            builder.Services.AddScoped<IRepository<DonationAdmin>, DonationAdminRepository>();
 
             var app = builder.Build();
 
