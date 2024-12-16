@@ -1,5 +1,7 @@
-using HACS.Data;
+using HACS.Dtos.DonorManagement;
+using HACS.Dtos.DonorManagement.Donor;
 using HACS.Interfaces.DonorManagement;
+using HACS.Mappers.DonorManagement;
 using HACS.Models.DonorManagement;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,40 +21,35 @@ public class DonorController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var donors = await _donorRepo.GetAllAsync();
-        return Ok(donors);
+        var donorDtos = donors.Select(donor => donor.Map());
+        return Ok(donorDtos);
     }
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
         var donor = await _donorRepo.GetByIdAsync(id);
+        if (donor == null) return NotFound();
         
-        if (donor == null)
-        {
-            return NotFound();
-        }
-        return Ok(donor);
+        var donorDto = donor.Map();
+        return Ok(donorDto);
     }
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Donor donor)
+    public async Task<IActionResult> Create([FromBody] PostDonorDto donorDto)
     {
-        await _donorRepo.CreateAsync(donor);
-        return CreatedAtAction(nameof(GetById), new { id = donor.Id }, donor);
+        var donor = donorDto.Map();
+        var dbDonor = await _donorRepo.CreateAsync(donor);
+        return CreatedAtAction(nameof(GetById), new { id = dbDonor.Id }, dbDonor.Map());
     }
-    [HttpPut]
-    public async Task<IActionResult> Update([FromBody] Donor donor)
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update([FromBody] PostDonorDto donorDto, [FromRoute] Guid id)
     {
-        var existingDonor = await _donorRepo.GetByIdAsync(donor.Id);
-        if (existingDonor is null) return NotFound();
-
+        var donor = donorDto.Map(id);
         await _donorRepo.UpdateAsync(donor);
         return NoContent();
     }
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        var donor = await _donorRepo.GetByIdAsync(id);
-        if (donor is null) return NotFound();
-        
         await _donorRepo.DeleteAsync(id);
         return NoContent();
     }

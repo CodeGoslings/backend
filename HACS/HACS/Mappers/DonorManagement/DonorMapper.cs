@@ -1,14 +1,16 @@
 using System.Diagnostics.CodeAnalysis;
 using HACS.Dtos.DonorManagement;
+using HACS.Dtos.DonorManagement.Donor;
+using HACS.Helpers.DonorManagement;
 using HACS.Models.DonorManagement;
 
 namespace HACS.Mappers.DonorManagement;
 
 public static class DonorMapper
 {
-    public static DonorDto Map(this Donor donor)
+    public static GetDonorDto Map(this Donor donor)
     {
-        var donorDto = new DonorDto
+        var donorDto = new GetDonorDto
         {
             Id = donor.Id,
             FirstName = donor.FirstName,
@@ -19,16 +21,9 @@ public static class DonorMapper
         return donorDto;
     }
     
-    public static Donor Map(this DonorDto dto)
-    {
-        var donorObj = new Donor
-        {
-            Id = dto.Id,
-            FirstName = dto.FirstName,
-            MiddleName = dto.MiddleName,
-            LastName = dto.LastName,
-            Email = dto.Email
-        };
-        return donorObj;
+    public static Donor Map(this PostDonorDto dto, Guid id = default)
+    { 
+        return new Donor(dto.FirstName, dto.LastName, dto.Email, HashHelper.HashPassword(dto.Password),
+            dto.MiddleName, id);
     }
 }

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace HACS.Dtos.DonorManagement;
+namespace HACS.Dtos.DonorManagement.Donation;
 
 public class DonationDto
 {
