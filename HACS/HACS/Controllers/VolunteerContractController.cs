@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HACS.Dtos.VolunteerContract;
 using HACS.Interfaces;
 using HACS.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +26,18 @@ namespace HACS.Controllers
             _organizationRepo = organizationRepo;
             _volunteerContractRepo = volunteerContractRepo;
         }
-        [HttpGet("{volunteerId}")]
-        public async Task<IActionResult> GetVolunteerOrganizations([FromRoute] int volunteerId)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromRoute] int id)
+        {
+            var contract = await _volunteerContractRepo.GetByIdAsync(id);
+            if (contract == null)
+            {
+                return NotFound("Volunteer contract does not exist");
+            }
+            return Ok(contract.ToVolunteerContractDto());
+        }
+        [HttpGet("volunteer/{volunteerId}")]
+        public async Task<IActionResult> GetByVolunteer([FromRoute] int volunteerId)
         {
             var volunteer = await _volunteerRepo.GetByIdAsync(volunteerId);
             if (volunteer == null)
@@ -34,9 +45,40 @@ namespace HACS.Controllers
                 return BadRequest("Volunteer does not exist");
             }
             var volunteerContracts = await _volunteerContractRepo.GetByVolunteer(volunteerId);
-            var organizations = volunteerContracts.Select(a => a.Organization).ToList();
-            var organizationsDto = organizations.Select(a => a.ToOrganizationDto());
-            return Ok(organizationsDto);
+            var volunteerContractsDto = volunteerContracts.Select(x => x.ToVolunteerContractDto()).ToList();
+            return Ok(volunteerContractsDto);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateVolunteerContractDto volunteerContractDto)
+        {
+            var contract = volunteerContractDto.ToVolunteerContractFromCreate();
+            await _volunteerContractRepo.CreateAsync(contract);
+            return CreatedAtAction(nameof(GetById), new { id = contract.Id }, contract.ToVolunteerContractDto());
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateVolunteerContractDto volunteerContractDto)
+        {
+            var model = await _volunteerContractRepo.UpdateAsync(id, volunteerContractDto.ToVolunteerContractFromUpdate());
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(model.ToVolunteerContractDto());
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var contract = await _volunteerContractRepo.DeleteAsync(id);
+
+            if (contract == null)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
     }
 }

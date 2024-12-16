@@ -27,9 +27,6 @@ namespace HACS.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder
-                .Entity<VolunteerContract>(x => x.HasKey(vc => new { vc.VolunteerId, vc.OrganizationId }));
-
-            modelBuilder
                 .Entity<VolunteerContract>()
                 .HasOne(vc => vc.Volunteer)
                 .WithMany(v => v.VolunteerContracts)
