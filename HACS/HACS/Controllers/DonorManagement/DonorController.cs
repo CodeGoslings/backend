@@ -10,12 +10,10 @@ namespace HACS.Controllers.DonorManagement;
 public class DonorController : ControllerBase
 {
     private readonly IRepository<Donor> _donorRepo;
-    private readonly IRepository<Donation> _donationRepo;
     
-    public DonorController(IRepository<Donor> donorRepo, IRepository<Donation> donationRepo)
+    public DonorController(IRepository<Donor> donorRepo)
     {
         _donorRepo = donorRepo;
-        _donationRepo = donationRepo;
     }
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -45,21 +43,6 @@ public class DonorController : ControllerBase
     {
         var existingDonor = await _donorRepo.GetByIdAsync(donor.Id);
         if (existingDonor is null) return NotFound();
-        
-        foreach (var donation in existingDonor.DonationHistory.ToList())
-        {
-            if (!donor.DonationHistory.ToList().Contains(donation))
-            { 
-                await _donationRepo.DeleteAsync(donation.Id);
-            }
-        }
-        foreach (var donation in donor.DonationHistory.ToList())
-        { 
-            if (!existingDonor.DonationHistory.ToList().Contains(donation))
-            {
-                await _donationRepo.CreateAsync(donation);
-            }
-        }
 
         await _donorRepo.UpdateAsync(donor);
         return NoContent();
@@ -69,10 +52,6 @@ public class DonorController : ControllerBase
     {
         var donor = await _donorRepo.GetByIdAsync(id);
         if (donor is null) return NotFound();
-        foreach (var donation in donor.DonationHistory.ToList())
-        {
-            await _donationRepo.DeleteAsync(donation.Id);
-        }
         
         await _donorRepo.DeleteAsync(id);
         return NoContent();
