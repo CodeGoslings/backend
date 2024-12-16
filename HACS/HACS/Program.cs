@@ -30,7 +30,7 @@ namespace HACS
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
             {
                 // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-                options.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=hacs;Trusted_Connection=True;TrustServerCertificate=True");
+                options.UseSqlServer("Server=localhost;Database=hacs;User Id=SA;Password=SqlServer1!;TrustServerCertificate=True;Encrypt=false;");
             });
 
             builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();

@@ -4,16 +4,18 @@ public class DonationAdmin : User
 {
     public List<Donation> ReviewedDonations { get; set; }
     
+    public DonationAdmin() {}
+    
     public DonationAdmin(string firstName, string lastName, string email, string password, 
-        string? secondName = null, Guid id = new()
-    ) : base(firstName, lastName, email, password, secondName, id)
+        string? middleName = null, Guid id = default
+    ) : base(firstName, lastName, email, password, middleName, id)
     {
         ReviewedDonations = [];
     }
     
     public DonationAdmin(string firstName, string lastName, string email, string password, List<Donation> reviewedDonations, 
-        string? secondName = null, Guid id = new()
-    ) : base(firstName, lastName, email, password, secondName, id)
+        string? middleName = null, Guid id = default
+    ) : base(firstName, lastName, email, password, middleName, id)
     {
         ReviewedDonations = reviewedDonations;
     }

@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace HACS.Models.DonorManagement;
 
 public class Donor : User
@@ -9,15 +7,15 @@ public class Donor : User
     public Donor() {}
     
     public Donor(string firstName, string lastName, string email, string password, 
-        string? secondName = null, Guid id = new()
-    ) : base(firstName, lastName, email, password, secondName, id)
+        string? middleName = null, Guid id = default
+    ) : base(firstName, lastName, email, password, middleName, id)
     {
         DonationHistory = [];
     }
     
     public Donor(string firstName, string lastName, string email, string password, List<Donation> donationHistory, 
-        string? secondName = null, Guid id = new()
-        ) : base(firstName, lastName, email, password, secondName, id)
+        string? middleName = null, Guid id = default
+        ) : base(firstName, lastName, email, password, middleName, id)
     {
         DonationHistory = donationHistory;
     }

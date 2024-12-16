@@ -30,7 +30,7 @@ public class DonorRepository(ApplicationDBContext context) : IRepository<Donor>
         if (existingDonor == null) return null;
 
         existingDonor.FirstName = donor.FirstName;
-        existingDonor.SecondName = donor.SecondName;
+        existingDonor.MiddleName = donor.MiddleName;
         existingDonor.LastName = donor.LastName;
         existingDonor.Email = donor.Email;
         existingDonor.Password = donor.Password;

@@ -31,7 +31,7 @@ public class DonationAdminRepository(ApplicationDBContext context) : IRepository
         if (existingDonationAdmin == null) return null;
 
         existingDonationAdmin.FirstName = donationAdmin.FirstName;
-        existingDonationAdmin.SecondName = donationAdmin.SecondName;
+        existingDonationAdmin.MiddleName = donationAdmin.MiddleName;
         existingDonationAdmin.LastName = donationAdmin.LastName;
         existingDonationAdmin.Email = donationAdmin.Email;
         existingDonationAdmin.Password = donationAdmin.Password;
