@@ -34,7 +34,7 @@ public class DonationAdminRepository(ApplicationDBContext context) : IRepository
         existingDonationAdmin.MiddleName = donationAdmin.MiddleName;
         existingDonationAdmin.LastName = donationAdmin.LastName;
         existingDonationAdmin.Email = donationAdmin.Email;
-        existingDonationAdmin.Password = donationAdmin.Password;
+        existingDonationAdmin.PasswordHash = donationAdmin.PasswordHash;
         existingDonationAdmin.ReviewedDonations = donationAdmin.ReviewedDonations;
         
         await context.SaveChangesAsync();

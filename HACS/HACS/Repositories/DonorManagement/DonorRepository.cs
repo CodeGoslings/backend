@@ -33,7 +33,7 @@ public class DonorRepository(ApplicationDBContext context) : IRepository<Donor>
         existingDonor.MiddleName = donor.MiddleName;
         existingDonor.LastName = donor.LastName;
         existingDonor.Email = donor.Email;
-        existingDonor.Password = donor.Password;
+        existingDonor.PasswordHash = donor.PasswordHash;
         existingDonor.DonationHistory = donor.DonationHistory;
         
         await context.SaveChangesAsync();

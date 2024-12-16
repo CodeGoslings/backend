@@ -29,13 +29,13 @@ public class Donation
 
 public enum DonationStatus
 {
-    Pending,
-    Accepted,
-    Declined,
+    Pending = 0,
+    Accepted = 1,
+    Declined = 2,
 }
 
 public enum DonationType
 {
-    Financial,
-    Material
+    Financial = 0,
+    Material = 1
 }

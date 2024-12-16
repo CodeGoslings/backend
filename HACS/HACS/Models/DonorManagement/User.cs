@@ -3,9 +3,6 @@ using Newtonsoft.Json;
 
 namespace HACS.Models.DonorManagement;
 
-// This class was created for the urgent need of the donor and donation management component.
-// Feel free to also utilize it (recommended).
-
 public class User 
 {
     [Key]
@@ -14,17 +11,17 @@ public class User
     public string? MiddleName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
-    public string Password { get; set; }
+    public string PasswordHash { get; set; }
     
     protected User() {}
     
-    protected User(string firstName, string lastName, string email, string password, string? middleName = null, Guid id = default)
+    protected User(string firstName, string lastName, string email, string passwordHash, string? middleName = null, Guid id = default)
     {
         FirstName = firstName;
         MiddleName = middleName;
         LastName = lastName;
         Email = email;
-        Password = password;
+        PasswordHash = passwordHash;
         Id = id;
     }
     public string GetFullName()
