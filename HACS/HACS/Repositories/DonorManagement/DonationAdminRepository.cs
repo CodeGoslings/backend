@@ -9,12 +9,12 @@ public class DonationAdminRepository(ApplicationDBContext context) : IRepository
 {
     public async Task<List<DonationAdmin>> GetAllAsync()
     {
-        return await context.DonationAdmins.ToListAsync();
+        return await context.DonationAdmins.Include(x => x.ReviewedDonations).ToListAsync();
     }
 
     public async Task<DonationAdmin?> GetByIdAsync(Guid id)
     {
-        return await context.DonationAdmins.FindAsync(id);
+        return await context.DonationAdmins.Include(x => x.ReviewedDonations).FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<DonationAdmin?> CreateAsync(DonationAdmin donationAdmin)
@@ -26,7 +26,7 @@ public class DonationAdminRepository(ApplicationDBContext context) : IRepository
 
     public async Task<DonationAdmin?> UpdateAsync(DonationAdmin donationAdmin)
     {
-        var existingDonationAdmin = await context.DonationAdmins.FirstOrDefaultAsync(
+        var existingDonationAdmin = await context.DonationAdmins.Include(x => x.ReviewedDonations).FirstOrDefaultAsync(
             x => x.Id == donationAdmin.Id);
         if (existingDonationAdmin == null) return null;
 
@@ -43,7 +43,7 @@ public class DonationAdminRepository(ApplicationDBContext context) : IRepository
 
     public async Task<DonationAdmin?> DeleteAsync(Guid id)
     {
-        var donationAdmin = await context.DonationAdmins.FirstOrDefaultAsync(x => x.Id == id);
+        var donationAdmin = await context.DonationAdmins.Include(x => x.ReviewedDonations).FirstOrDefaultAsync(x => x.Id == id);
         if (donationAdmin == null) return null;
         
         context.DonationAdmins.Remove(donationAdmin);

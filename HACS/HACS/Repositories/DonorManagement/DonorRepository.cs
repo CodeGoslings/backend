@@ -9,12 +9,12 @@ public class DonorRepository(ApplicationDBContext context) : IRepository<Donor>
 {
     public async Task<List<Donor>> GetAllAsync()
     {
-        return await context.Donors.ToListAsync();
+        return await context.Donors.Include(x => x.DonationHistory).ToListAsync();
     }
 
     public async Task<Donor?> GetByIdAsync(Guid id)
     {
-        return await context.Donors.FindAsync(id);
+        return await context.Donors.Include(x => x.DonationHistory).FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<Donor?> CreateAsync(Donor donor)
@@ -26,7 +26,7 @@ public class DonorRepository(ApplicationDBContext context) : IRepository<Donor>
 
     public async Task<Donor?> UpdateAsync(Donor donor)
     {
-        var existingDonor = await context.Donors.FirstOrDefaultAsync(x => x.Id == donor.Id);
+        var existingDonor = await context.Donors.Include(x => x.DonationHistory).FirstOrDefaultAsync(x => x.Id == donor.Id);
         if (existingDonor == null) return null;
 
         existingDonor.FirstName = donor.FirstName;
@@ -42,7 +42,7 @@ public class DonorRepository(ApplicationDBContext context) : IRepository<Donor>
 
     public async Task<Donor?> DeleteAsync(Guid id)
     {
-        var donor = await context.Donors.FirstOrDefaultAsync(x => x.Id == id);
+        var donor = await context.Donors.Include(x => x.DonationHistory).FirstOrDefaultAsync(x => x.Id == id);
         if (donor == null) return null;
 
         context.Donors.Remove(donor);

@@ -9,13 +9,11 @@ namespace HACS.Controllers.DonorManagement;
 [ApiController]
 public class DonorController : ControllerBase
 {
-    private readonly ApplicationDBContext _context;
     private readonly IRepository<Donor> _donorRepo;
     private readonly IRepository<Donation> _donationRepo;
     
-    public DonorController(ApplicationDBContext context, IRepository<Donor> donorRepo, IRepository<Donation> donationRepo)
+    public DonorController(IRepository<Donor> donorRepo, IRepository<Donation> donationRepo)
     {
-        _context = context;
         _donorRepo = donorRepo;
         _donationRepo = donationRepo;
     }
@@ -45,14 +43,37 @@ public class DonorController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] Donor donor)
     {
-        // TODO: Add and remove donations from the donation history / create DTOs
+        var existingDonor = await _donorRepo.GetByIdAsync(donor.Id);
+        if (existingDonor is null) return NotFound();
+        
+        foreach (var donation in existingDonor.DonationHistory.ToList())
+        {
+            if (!donor.DonationHistory.ToList().Contains(donation))
+            { 
+                await _donationRepo.DeleteAsync(donation.Id);
+            }
+        }
+        foreach (var donation in donor.DonationHistory.ToList())
+        { 
+            if (!existingDonor.DonationHistory.ToList().Contains(donation))
+            {
+                await _donationRepo.CreateAsync(donation);
+            }
+        }
+
         await _donorRepo.UpdateAsync(donor);
         return NoContent();
     }
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        // TODO: Remove donations on delete
+        var donor = await _donorRepo.GetByIdAsync(id);
+        if (donor is null) return NotFound();
+        foreach (var donation in donor.DonationHistory.ToList())
+        {
+            await _donationRepo.DeleteAsync(donation.Id);
+        }
+        
         await _donorRepo.DeleteAsync(id);
         return NoContent();
     }
