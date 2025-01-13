@@ -2,6 +2,8 @@
 
 using MRCService;
 using MRCModel;
+using System.ComponentModel;
+using System.Text.Json.Nodes;
 
 Console.WriteLine("Hello, World!");
 
@@ -17,4 +19,46 @@ Request req = new Request(
 );
 
 var jsonObject = req.ToJsonObject();
-Console.WriteLine(jsonObject.ToJsonString());
+// Console.WriteLine(jsonObject.ToJsonString());
+
+Console.WriteLine("Creating two requests and fetching them");
+
+IAIService service = IAIService.createService();
+
+service.createRequest(1,"type", "description", "priority", "location", DateTime.Now, "Pending", "Anna");
+service.createRequest(2,"type", "description", "priority", "location", DateTime.Now, "Pending", "Jeremi");
+
+JsonArray requests = service.viewRequests();
+
+foreach (var request in requests)
+{
+    Console.WriteLine(request.ToJsonString(new System.Text.Json.JsonSerializerOptions
+    {
+        WriteIndented = true
+    }));
+}
+
+Console.WriteLine("Changing request status of request 1 to Denied");
+
+service.updateRequestStatus(1,"Denied");
+
+requests = service.viewRequests();
+
+foreach (var request in requests)
+{
+    Console.WriteLine(request.ToJsonString(new System.Text.Json.JsonSerializerOptions
+    {
+        WriteIndented = true
+    }));
+}
+
+Console.WriteLine("Fetching request information of request 2");
+
+requests = service.viewRequestDetails(2);
+foreach (var request in requests)
+{
+    Console.WriteLine(request.ToJsonString(new System.Text.Json.JsonSerializerOptions
+    {
+        WriteIndented = true
+    }));
+}

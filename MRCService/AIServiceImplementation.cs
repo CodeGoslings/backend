@@ -5,6 +5,11 @@ namespace MRCService;
 public class AIService : IAIService
 {
     private DatabaseManager databaseManager;
+
+    public AIService()
+    {
+            databaseManager = new DatabaseManager(); // Initialize databaseManager here
+    }
     public bool createRequest(int requestId, string type, string description, string priority, string location, DateTime submissionDate, string status, string submittedBy)
     {
         if (!Enum.TryParse<RequestStatus>(status, out var parsedStatus) ||
@@ -57,15 +62,15 @@ public class AIService : IAIService
         return false;
     }
     public JsonArray viewRequests()
+{
+    List<Request> requests = databaseManager.FetchAllRequests();
+    JsonArray arr = new JsonArray();
+    foreach (var request in requests)
     {
-        List<Request> requests = databaseManager.FetchAllRequests();
-        JsonArray arr = [];
-        foreach (var request in requests)
-        {
-            arr.Add(request.ToJsonObject);
-        }
-        return arr;
+        arr.Add(request.ToJsonObject());
     }
+    return arr;
+}
     public string viewRequestStatus(int requestId)
     {
         return databaseManager.FindRequestById(requestId).status.ToString();
