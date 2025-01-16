@@ -1,6 +1,6 @@
-namespace HACS.Dtos.DonorManagement.Donor;
+namespace HACS.Dtos.DonationAdmin;
 
-public class GetDonorDto
+public class GetDonationAdminDto
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }

@@ -1,13 +1,13 @@
-using HACS.Dtos.DonorManagement.Donation;
-using HACS.Models.DonorManagement;
+using HACS.Dtos.Donation;
+using HACS.Models;
 
-namespace HACS.Mappers.DonorManagement;
+namespace HACS.Mappers;
 
 public static class DonationMapper
 {
     public static DonationDto Map(this Donation donation)
     {
-        var donationDto = new DonationDto()
+        var donationDto = new DonationDto
         {
             Id = donation.Id,
             Type = (int)donation.Type,
@@ -15,11 +15,11 @@ public static class DonationMapper
             Date = donation.Date,
             Amount = donation.Amount,
             Description = donation.Description,
-            Location = donation.Location,
+            Location = donation.Location
         };
         return donationDto;
     }
-    
+
     public static Donation Map(this DonationDto dto)
     {
         return new Donation((DonationType)dto.Type, (DonationStatus)dto.Status, dto.Date, dto.Amount,

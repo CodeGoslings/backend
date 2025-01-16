@@ -1,9 +1,9 @@
 using HACS.Data;
-using HACS.Interfaces.DonorManagement;
-using HACS.Models.DonorManagement;
+using HACS.Interfaces;
+using HACS.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace HACS.Repositories.DonorManagement;
+namespace HACS.Repositories;
 
 public class DonorRepository(ApplicationDBContext context) : IRepository<Donor>
 {
@@ -26,7 +26,8 @@ public class DonorRepository(ApplicationDBContext context) : IRepository<Donor>
 
     public async Task<Donor?> UpdateAsync(Donor donor)
     {
-        var existingDonor = await context.Donors.Include(x => x.DonationHistory).FirstOrDefaultAsync(x => x.Id == donor.Id);
+        var existingDonor =
+            await context.Donors.Include(x => x.DonationHistory).FirstOrDefaultAsync(x => x.Id == donor.Id);
         if (existingDonor == null) return null;
 
         existingDonor.FirstName = donor.FirstName;
@@ -35,7 +36,7 @@ public class DonorRepository(ApplicationDBContext context) : IRepository<Donor>
         existingDonor.Email = donor.Email;
         existingDonor.PasswordHash = donor.PasswordHash;
         existingDonor.DonationHistory = donor.DonationHistory;
-        
+
         await context.SaveChangesAsync();
         return existingDonor;
     }

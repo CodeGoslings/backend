@@ -1,4 +1,4 @@
-namespace HACS.Interfaces.DonorManagement;
+namespace HACS.Interfaces;
 
 public interface IRepository<T>
 {

@@ -1,8 +1,8 @@
-using HACS.Dtos.DonorManagement.DonationAdmin;
-using HACS.Helpers.DonorManagement;
-using HACS.Models.DonorManagement;
+using HACS.Dtos.DonationAdmin;
+using HACS.Helpers;
+using HACS.Models;
 
-namespace HACS.Mappers.DonorManagement;
+namespace HACS.Mappers;
 
 public static class DonationAdminMapper
 {
@@ -18,7 +18,7 @@ public static class DonationAdminMapper
         };
         return donationAdminDto;
     }
-    
+
     public static DonationAdmin Map(this PostDonationAdminDto dto, Guid id = default)
     {
         return new DonationAdmin(dto.FirstName, dto.LastName, dto.Email, HashHelper.HashPassword(dto.Password),

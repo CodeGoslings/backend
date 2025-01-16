@@ -1,6 +1,6 @@
-namespace HACS.Dtos.DonorManagement.DonationAdmin;
+namespace HACS.Dtos.Donor;
 
-public class PostDonationAdminDto
+public class PostDonorDto
 {
     public string FirstName { get; set; }
     public string? MiddleName { get; set; }

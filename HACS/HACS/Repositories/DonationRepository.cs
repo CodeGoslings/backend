@@ -1,9 +1,9 @@
 using HACS.Data;
-using HACS.Interfaces.DonorManagement;
-using HACS.Models.DonorManagement;
+using HACS.Interfaces;
+using HACS.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace HACS.Repositories.DonorManagement;
+namespace HACS.Repositories;
 
 public class DonationRepository(ApplicationDBContext context) : IRepository<Donation>
 {
@@ -35,7 +35,7 @@ public class DonationRepository(ApplicationDBContext context) : IRepository<Dona
         existingDonation.Amount = donation.Amount;
         existingDonation.Description = donation.Description;
         existingDonation.Location = donation.Location;
-        
+
         await context.SaveChangesAsync();
         return existingDonation;
     }
@@ -44,7 +44,7 @@ public class DonationRepository(ApplicationDBContext context) : IRepository<Dona
     {
         var donation = await context.Donations.FirstOrDefaultAsync(x => x.Id == id);
         if (donation == null) return null;
-        
+
         context.Donations.Remove(donation);
         await context.SaveChangesAsync();
         return donation;
