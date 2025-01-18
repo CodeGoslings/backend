@@ -9,17 +9,19 @@ public static class DonorMapper
     {
         var donorDto = new GetDonorDto
         {
-            Id = donor.Id,
+            Id = Guid.Parse(donor.Id),
             FirstName = donor.FirstName,
             MiddleName = donor.MiddleName,
             LastName = donor.LastName,
+            UserName = donor.UserName,
             Email = donor.Email
         };
         return donorDto;
     }
 
-    public static Donor Map(this PostDonorDto dto, Guid id = default)
+    public static Donor Map(this PostDonorDto dto, Guid? id = null)
     {
-        return new Donor(dto.FirstName, dto.LastName, dto.Email, dto.MiddleName, id);
+        var adminId = id ?? Guid.NewGuid();
+        return new Donor(dto.FirstName, dto.LastName, dto.UserName, dto.Email, dto.MiddleName, adminId);
     }
 }

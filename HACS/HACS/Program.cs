@@ -57,7 +57,7 @@ public class Program
 
         builder.Services.AddDbContext<ApplicationDBContext>();
 
-        builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+        builder.Services.AddIdentityCore<Donor>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
@@ -69,8 +69,25 @@ public class Program
                 options.SignIn.RequireConfirmedEmail = false;
                 options.SignIn.RequireConfirmedAccount = false;
             })
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDBContext>()
             .AddDefaultTokenProviders();
+        
+        builder.Services.AddIdentityCore<DonationAdmin>(options =>
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequiredLength = 1;
+            options.Password.RequiredUniqueChars = 1;
+            options.User.RequireUniqueEmail = true;
+            options.SignIn.RequireConfirmedEmail = false;
+            options.SignIn.RequireConfirmedAccount = false;
+        })
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDBContext>()
+        .AddDefaultTokenProviders();
 
         builder.Services.AddAuthentication(options =>
         {

@@ -6,17 +6,17 @@ public class DonationAdmin : User
     {
     }
 
-    public DonationAdmin(string firstName, string lastName, string email,
+    public DonationAdmin(string firstName, string lastName, string userName, string email,
         string? middleName = null, Guid id = default
-    ) : base(firstName, lastName, email, middleName, id)
+    ) : base(firstName, lastName, userName, email, middleName, id)
     {
         ReviewedDonations = [];
     }
 
-    public DonationAdmin(string firstName, string lastName, string email,
+    public DonationAdmin(string firstName, string lastName, string userName, string email,
         List<Donation> reviewedDonations,
         string? middleName = null, Guid id = default
-    ) : base(firstName, lastName, email, middleName, id)
+    ) : base(firstName, lastName, userName, email, middleName, id)
     {
         ReviewedDonations = reviewedDonations;
     }

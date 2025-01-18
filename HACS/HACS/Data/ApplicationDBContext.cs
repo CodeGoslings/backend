@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HACS.Data;
 
-public class ApplicationDBContext : IdentityDbContext<IdentityUser>
+public class ApplicationDBContext : IdentityDbContext<User>
 {
-    public DbSet<User> Users { get; set; }
+    // public DbSet<User> Users { get; set; }
     public DbSet<Donation> Donations { get; set; }
     public DbSet<Donor> Donors { get; set; }
     public DbSet<DonationAdmin> DonationAdmins { get; set; }

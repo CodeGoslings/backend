@@ -38,7 +38,7 @@ public class DonorController : ControllerBase
     public async Task<IActionResult> Create([FromBody] PostDonorDto donorDto)
     {
         var donor = donorDto.Map();
-        var dbDonor = await _donorRepo.CreateAsync(donor);
+        var dbDonor = await _donorRepo.CreateAsync(donor, donorDto.Password);
         return CreatedAtAction(nameof(GetById), new { id = dbDonor.Id }, dbDonor.Map());
     }
 
