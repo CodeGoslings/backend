@@ -1,16 +1,18 @@
+using HACS.Dtos.VolunteerContract;
+using HACS.Interfaces;
+using HACS.Mappers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HACS.Dtos.VolunteerContract;
-using HACS.Interfaces;
-using HACS.Mappers;
-using Microsoft.AspNetCore.Mvc;
 
 namespace HACS.Controllers
 {
     [Route("api/volunteer-contract")]
     [ApiController]
+    [Authorize(Roles = "Admin,Volunteer,OrganizationManager")]
     public class VolunteerContractController : ControllerBase
     {
         private readonly IVolunteerRepository _volunteerRepo;

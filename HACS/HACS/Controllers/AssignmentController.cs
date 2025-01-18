@@ -1,18 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using HACS.Data;
 using HACS.Dtos.Assignment;
 using HACS.Interfaces;
 using HACS.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HACS.Controllers
 {
     [Route("api/assignment")]
     [ApiController]
+    [Authorize(Roles = "Admin,OrganizationManager")]
     public class AssignmentController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
