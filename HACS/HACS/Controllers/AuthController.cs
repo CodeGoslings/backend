@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Annotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -28,6 +29,9 @@ namespace HACS.Controllers
         }
 
         [HttpPost("initRoles")]
+        [SwaggerOperation(Summary = "Initialize roles", Description = "Creates Admin, Volunteer, and OrganizationManager roles if they do not exist." +
+            "Ensure that roles are created before registration")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Roles created or already exist.")]
         public async Task<IActionResult> InitRoles()
         {
             var roles = new[] { "Admin", "Volunteer", "OrganizationManager" };
@@ -42,6 +46,9 @@ namespace HACS.Controllers
         }
 
         [HttpPost("register")]
+        [SwaggerOperation(Summary = "Register a new user", Description = "Registers a user and assigns a specified role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "User created successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid role or user already exists.")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             var validRoles = new[] { "Admin", "Volunteer", "OrganizationManager" };
@@ -75,6 +82,9 @@ namespace HACS.Controllers
 
         [HttpPost]
         [Route("login")]
+        [SwaggerOperation(Summary = "User login", Description = "Logs in a user and returns a JWT token.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Token generated successfully.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "User unauthorized.")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             var user = await _userManager.FindByNameAsync(model.Username);
@@ -106,6 +116,8 @@ namespace HACS.Controllers
         [HttpGet]
         [Authorize(Roles = "Admin,Volunteer,OrganizationManager")]
         [Route("authorizedHelloWorld")]
+        [SwaggerOperation(Summary = "Authorized HelloWorld", Description = "A test which returns a message if user is authorized.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "You are authorized.")]
         public async Task<IActionResult> AuthorizedHelloWorld()
         {
             return Ok("You are authorized");
