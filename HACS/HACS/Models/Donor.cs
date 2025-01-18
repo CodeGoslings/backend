@@ -6,16 +6,16 @@ public class Donor : User
     {
     }
 
-    public Donor(string firstName, string lastName, string email, string password,
+    public Donor(string firstName, string lastName, string email,
         string? middleName = null, Guid id = default
-    ) : base(firstName, lastName, email, password, middleName, id)
+    ) : base(firstName, lastName, email, middleName, id)
     {
         DonationHistory = [];
     }
 
-    public Donor(string firstName, string lastName, string email, string password, List<Donation> donationHistory,
+    public Donor(string firstName, string lastName, string email, List<Donation> donationHistory,
         string? middleName = null, Guid id = default
-    ) : base(firstName, lastName, email, password, middleName, id)
+    ) : base(firstName, lastName, email, middleName, id)
     {
         DonationHistory = donationHistory;
     }

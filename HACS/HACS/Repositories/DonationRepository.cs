@@ -17,7 +17,7 @@ public class DonationRepository(ApplicationDBContext context) : IRepository<Dona
         return await context.Donations.FindAsync(id);
     }
 
-    public async Task<Donation?> CreateAsync(Donation donation)
+    public async Task<Donation?> CreateAsync(Donation donation, string? attribute = null)
     {
         await context.Donations.AddAsync(donation);
         await context.SaveChangesAsync();
@@ -40,13 +40,12 @@ public class DonationRepository(ApplicationDBContext context) : IRepository<Dona
         return existingDonation;
     }
 
-    public async Task<Donation?> DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
         var donation = await context.Donations.FirstOrDefaultAsync(x => x.Id == id);
-        if (donation == null) return null;
+        if (donation == null) throw new Exception("Donation not found");
 
         context.Donations.Remove(donation);
         await context.SaveChangesAsync();
-        return donation;
     }
 }

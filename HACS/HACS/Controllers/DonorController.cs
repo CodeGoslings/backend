@@ -11,7 +11,7 @@ namespace HACS.Controllers;
 public class DonorController : ControllerBase
 {
     private readonly IRepository<Donor> _donorRepo;
-
+    
     public DonorController(IRepository<Donor> donorRepo)
     {
         _donorRepo = donorRepo;
@@ -30,7 +30,6 @@ public class DonorController : ControllerBase
     {
         var donor = await _donorRepo.GetByIdAsync(id);
         if (donor == null) return NotFound();
-
         var donorDto = donor.Map();
         return Ok(donorDto);
     }

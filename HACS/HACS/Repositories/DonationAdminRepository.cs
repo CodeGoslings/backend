@@ -1,54 +1,41 @@
-using HACS.Data;
 using HACS.Interfaces;
 using HACS.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace HACS.Repositories;
 
-public class DonationAdminRepository(ApplicationDBContext context) : IRepository<DonationAdmin>
+public class DonationAdminRepository(UserManager<DonationAdmin> userManager) : IRepository<DonationAdmin>
 {
     public async Task<List<DonationAdmin>> GetAllAsync()
     {
-        return await context.DonationAdmins.Include(x => x.ReviewedDonations).ToListAsync();
+        return await userManager.Users.Include(x => x.ReviewedDonations).ToListAsync();
     }
 
     public async Task<DonationAdmin?> GetByIdAsync(Guid id)
     {
-        return await context.DonationAdmins.Include(x => x.ReviewedDonations).FirstOrDefaultAsync(x => x.Id == id);
+        return await userManager.FindByIdAsync(id.ToString());
     }
 
-    public async Task<DonationAdmin?> CreateAsync(DonationAdmin donationAdmin)
+    public async Task<DonationAdmin?> CreateAsync(DonationAdmin donationAdmin, string? password)
     {
-        await context.DonationAdmins.AddAsync(donationAdmin);
-        await context.SaveChangesAsync();
-        return donationAdmin;
+        ArgumentNullException.ThrowIfNull(password);
+        var result = await userManager.CreateAsync(donationAdmin, password);
+        await userManager.AddToRoleAsync(donationAdmin, "DonationAdmin");
+        return result.Succeeded ? donationAdmin : null;
     }
 
     public async Task<DonationAdmin?> UpdateAsync(DonationAdmin donationAdmin)
     {
-        var existingDonationAdmin = await context.DonationAdmins.Include(x => x.ReviewedDonations).FirstOrDefaultAsync(
-            x => x.Id == donationAdmin.Id);
-        if (existingDonationAdmin == null) return null;
-
-        existingDonationAdmin.FirstName = donationAdmin.FirstName;
-        existingDonationAdmin.MiddleName = donationAdmin.MiddleName;
-        existingDonationAdmin.LastName = donationAdmin.LastName;
-        existingDonationAdmin.Email = donationAdmin.Email;
-        existingDonationAdmin.PasswordHash = donationAdmin.PasswordHash;
-        existingDonationAdmin.ReviewedDonations = donationAdmin.ReviewedDonations;
-
-        await context.SaveChangesAsync();
-        return existingDonationAdmin;
+        var result = await userManager.UpdateAsync(donationAdmin);
+        return result.Succeeded ? donationAdmin : null;
     }
 
-    public async Task<DonationAdmin?> DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
-        var donationAdmin = await context.DonationAdmins.Include(x => x.ReviewedDonations)
-            .FirstOrDefaultAsync(x => x.Id == id);
-        if (donationAdmin == null) return null;
-
-        context.DonationAdmins.Remove(donationAdmin);
-        await context.SaveChangesAsync();
-        return donationAdmin;
+        var user = await userManager.FindByIdAsync(id.ToString());
+        if (user is null) throw new ArgumentException("User not found");
+        var result = await userManager.DeleteAsync(user);
+        if (!result.Succeeded) throw new Exception("Failed to delete user");
     }
 }

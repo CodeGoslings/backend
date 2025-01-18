@@ -29,7 +29,6 @@ public class DonationAdminController : ControllerBase
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
         var donationAdmin = await _donationAdminRepo.GetByIdAsync(id);
-
         if (donationAdmin == null) return NotFound();
         var donationAdminDto = donationAdmin.Map();
         return Ok(donationAdminDto);
@@ -40,7 +39,6 @@ public class DonationAdminController : ControllerBase
     {
         var donationAdmin = donationAdminDto.Map();
         var dbDonationAdmin = await _donationAdminRepo.CreateAsync(donationAdmin);
-
         return CreatedAtAction(nameof(GetById), new { id = dbDonationAdmin.Id }, dbDonationAdmin.Map());
     }
 
