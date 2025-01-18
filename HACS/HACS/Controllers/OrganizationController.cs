@@ -1,16 +1,18 @@
+using HACS.Dtos.Organization;
+using HACS.Interfaces;
+using HACS.Mappers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HACS.Dtos.Organization;
-using HACS.Interfaces;
-using HACS.Mappers;
-using Microsoft.AspNetCore.Mvc;
 
 namespace HACS.Controllers
 {
     [Route("api/organization")]
     [ApiController]
+    [Authorize(Roles = "Admin,OrganizationManager")]
     public class OrganizationController : ControllerBase
     {
         private readonly IOrganizationRepository _organizationRepo;

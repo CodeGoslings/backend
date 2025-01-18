@@ -15,25 +15,48 @@ namespace HACS.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public AuthController(
             UserManager<IdentityUser> userManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _roleManager = roleManager;
         }
 
-        [HttpPost]
-        [Route("register")]
+        [HttpPost("initRoles")]
+        public async Task<IActionResult> InitRoles()
+        {
+            var roles = new[] { "Admin", "Volunteer", "OrganizationManager" };
+            foreach (var role in roles)
+            {
+                if (!await _roleManager.RoleExistsAsync(role))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+            return Ok(new { Status = "Success", Message = "Roles created or already exist." });
+        }
+
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
+            var validRoles = new[] { "Admin", "Volunteer", "OrganizationManager" };
+            if (!validRoles.Contains(model.Role))
+            {
+                return BadRequest(new { Status = "Error", Message = "Invalid role requested" });
+            }
+
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status400BadRequest,
-                    new { Status = "Error", Message = "User already exists!" });
+            {
+                return BadRequest(new { Status = "Error", Message = "User already exists!" });
+            }
 
-            IdentityUser user = new()
+            var user = new IdentityUser
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -42,10 +65,12 @@ namespace HACS.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status400BadRequest,
-                    new { Status = "Error", Message = "User creation failed!", Errors = result.Errors });
+            {
+                return BadRequest(new { Status = "Error", Message = "User creation failed!", Errors = result.Errors });
+            }
 
-            return Ok(new { Status = "Success", Message = "User created successfully!" });
+            await _userManager.AddToRoleAsync(user, model.Role);
+            return Ok(new { Status = "Success", Message = $"User created with role {model.Role} successfully!" });
         }
 
         [HttpPost]
@@ -61,6 +86,12 @@ namespace HACS.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
+                var roles = await _userManager.GetRolesAsync(user);
+                foreach (var role in roles)
+                {
+                    authClaims.Add(new Claim(ClaimTypes.Role, role));
+                }
+
                 var token = GetToken(authClaims);
 
                 return Ok(new
@@ -73,7 +104,7 @@ namespace HACS.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin,Volunteer,OrganizationManager")]
         [Route("authorizedHelloWorld")]
         public async Task<IActionResult> AuthorizedHelloWorld()
         {

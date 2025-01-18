@@ -1,19 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using HACS.Data;
 using HACS.Dtos.Volunteer;
 using HACS.Interfaces;
 using HACS.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HACS.Controllers
 {
 
     [Route("api/volunteer")]
     [ApiController]
+    [Authorize(Roles = "Admin,Volunteer,OrganizationManager")]
     public class VolunteerController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
