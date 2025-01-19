@@ -14,7 +14,7 @@ namespace HACS.Controllers
 {
     [Route("api/assignment")]
     [ApiController]
-    [Authorize(Roles = "Admin,OrganizationManager")]
+    [Authorize(Policy = "api/assignment")]
     public class AssignmentController : ControllerBase
     {
         private readonly ApplicationDBContext _context;

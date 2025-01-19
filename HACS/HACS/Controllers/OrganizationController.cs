@@ -12,7 +12,7 @@ namespace HACS.Controllers
 {
     [Route("api/organization")]
     [ApiController]
-    [Authorize(Roles = "Admin,OrganizationManager")]
+    [Authorize(Policy = "api/organization")]
     public class OrganizationController : ControllerBase
     {
         private readonly IOrganizationRepository _organizationRepo;

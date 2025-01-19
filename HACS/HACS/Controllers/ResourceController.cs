@@ -1,17 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using HACS.Dtos.Organization;
 using HACS.Dtos.Resource;
 using HACS.Interfaces;
 using HACS.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HACS.Controllers
 {
     [Route("api/resource")]
     [ApiController]
+    [Authorize(Policy = "api/resource")]
     public class ResourceController : ControllerBase
     {
         private readonly IResourceRepository _resourceRepo;

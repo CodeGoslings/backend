@@ -60,6 +60,61 @@ namespace HACS.Controllers
                         Role = role
                     });
                 }
+
+                existingPerm = await _context.EndpointRolePermissions
+                   .FirstOrDefaultAsync(e => e.Endpoint == "api/volunteer" && e.Role == role);
+                if (existingPerm == null && (role == "Volunteer" || role == "OrganizationManager"))
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/volunteer",
+                        Role = role
+                    });
+                }
+
+                existingPerm = await _context.EndpointRolePermissions
+                   .FirstOrDefaultAsync(e => e.Endpoint == "api/volunteer-contract" && e.Role == role);
+                if (existingPerm == null && (role == "Volunteer" || role == "OrganizationManager"))
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/volunteer-contract",
+                        Role = role
+                    });
+                }
+
+                existingPerm = await _context.EndpointRolePermissions
+                   .FirstOrDefaultAsync(e => e.Endpoint == "api/resource" && e.Role == role);
+                if (existingPerm == null && role == "OrganizationManager")
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/resource",
+                        Role = role
+                    });
+                }
+
+                existingPerm = await _context.EndpointRolePermissions
+                   .FirstOrDefaultAsync(e => e.Endpoint == "api/organization" && e.Role == role);
+                if (existingPerm == null && role == "OrganizationManager")
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/organization",
+                        Role = role
+                    });
+                }
+
+                existingPerm = await _context.EndpointRolePermissions
+                   .FirstOrDefaultAsync(e => e.Endpoint == "api/assignment" && e.Role == role);
+                if (existingPerm == null && role == "OrganizationManager")
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/assignment",
+                        Role = role
+                    });
+                }
             }
             await _context.SaveChangesAsync();
             return Ok(new { Status = "Success", Message = "Roles created or already exist." });
