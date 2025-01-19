@@ -1,6 +1,7 @@
 using System.Globalization;
 using HACS.Interfaces;
 using HACS.Models;
+using MRCModel.Models;
 using Newtonsoft.Json.Serialization;
 using UglyToad.PdfPig.Content;
 using UglyToad.PdfPig.Core;
@@ -238,7 +239,7 @@ public static class PdfHelper
         return stream;
     }
 
-    public static MemoryStream GenerateAffectedIndividualsReport(List<Individual> affectedIndividuals)
+    public static MemoryStream GenerateAffectedIndividualsReport(List<AffectedIndividual> affectedIndividuals)
     {
         using var pdfDocumentBuilder = new PdfDocumentBuilder();
         var page = pdfDocumentBuilder.AddPage(PageSize.A4);
@@ -258,7 +259,7 @@ public static class PdfHelper
             }
             
             page.AddText($"{number}. {individual.Name}", 10, new PdfPoint(50, yPosition), font);
-            page.AddText($"{individual.Location}", 10, new PdfPoint(200, yPosition), font);
+            page.AddText($"{individual.userLocation}", 10, new PdfPoint(200, yPosition), font);
             
             yPosition -= 20;
             number++;
@@ -269,10 +270,4 @@ public static class PdfHelper
 
         return stream;
     }
-}
-
-public abstract class Individual(string name, string location)
-{
-    public string Name { get; set; } = name;
-    public string Location { get; set; } = location;
 }
