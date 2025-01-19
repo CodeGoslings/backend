@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using HACS.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -16,5 +20,18 @@ public class ApplicationDBContext : IdentityDbContext<User>
     {
         optionsBuilder.UseSqlServer(
             "Server=192.168.68.114;Database=hacs;User Id=SA;Password=SqlServer1;TrustServerCertificate=True;Encrypt=false;");
+    }
+    
+    public DbSet<Assignment> Assignments { get; set; }
+    public DbSet<Volunteer> Volunteers { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        
+        modelBuilder
+            .Entity<Assignment>()
+            .Property(a => a.Status)
+            .HasConversion<int>();
     }
 }

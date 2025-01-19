@@ -22,6 +22,37 @@ namespace HACS.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("HACS.Models.Assignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VolunteerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VolunteerId");
+
+                    b.ToTable("Assignments");
+                });
+
             modelBuilder.Entity("HACS.Models.Donation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -146,6 +177,31 @@ namespace HACS.Migrations
                     b.HasDiscriminator().HasValue("User");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("HACS.Models.Volunteer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Volunteers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -295,6 +351,17 @@ namespace HACS.Migrations
                     b.HasDiscriminator().HasValue("Donor");
                 });
 
+            modelBuilder.Entity("HACS.Models.Assignment", b =>
+                {
+                    b.HasOne("HACS.Models.Volunteer", "Volunteer")
+                        .WithMany("Assignments")
+                        .HasForeignKey("VolunteerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Volunteer");
+                });
+
             modelBuilder.Entity("HACS.Models.Donation", b =>
                 {
                     b.HasOne("HACS.Models.DonationAdmin", null)
@@ -355,6 +422,11 @@ namespace HACS.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HACS.Models.Volunteer", b =>
+                {
+                    b.Navigation("Assignments");
                 });
 
             modelBuilder.Entity("HACS.Models.DonationAdmin", b =>

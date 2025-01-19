@@ -112,6 +112,10 @@ public class Program
         builder.Services.AddScoped<IRepository<Donor>, DonorRepository>();
         builder.Services.AddScoped<IRepository<DonationAdmin>, DonationAdminRepository>();
         
+        builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+        builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+
+        
         var services = builder.Services.BuildServiceProvider();
         {
             // Make sure the database is created
@@ -142,8 +146,10 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+
         app.MapControllers();
 
         app.Run();
     }
 }
+

@@ -77,4 +77,191 @@ public static class PdfHelper
 
         return stream;
     }
+
+    public static MemoryStream GenerateAssignmentsReport(List<Assignment> assignments, int yearDue)
+    {
+        using var pdfDocumentBuilder = new PdfDocumentBuilder();
+        var page = pdfDocumentBuilder.AddPage(PageSize.A4);
+
+        var font = pdfDocumentBuilder.AddStandard14Font(Standard14Font.Courier);
+        
+        page.AddText("Assignments currently in progress (aid activities):", 16, new PdfPoint(50, 750), font);
+        page.DrawLine(new PdfPoint(40, 740), new PdfPoint(40, 740), 1D);
+        
+        var yPosition = 730;
+        var number = 0;
+        foreach (var assignment in assignments.Where(assignment => assignment.Status == AssignmentStatus.InProgress))
+        {
+            if (yPosition < 50)
+            {
+                page = pdfDocumentBuilder.AddPage(595, 842);
+                yPosition = 800;
+            }
+            
+            page.AddText($"{number}.", 12, new PdfPoint(50, yPosition), font);
+            
+            page.AddText($"{assignment.Volunteer.LastName}, {assignment.Volunteer.FirstName}", 10, new PdfPoint(100, yPosition), font);
+            page.AddText($"{assignment.DueDate.ToString(CultureInfo.InvariantCulture)}", 10, new PdfPoint(300, yPosition), font);
+            page.AddText($"{assignment.Description[..150]}", 10, new PdfPoint(350, yPosition), font);
+            
+            yPosition -= 20;
+            number++;
+        }
+        
+        page = pdfDocumentBuilder.AddPage(595, 842);
+        
+        page.AddText($"Total number of assignments in progress: {number}", 16, new PdfPoint(50, 750), font);
+        
+        page = pdfDocumentBuilder.AddPage(595, 842);
+        
+        page.AddText("Inactive assignments:", 16, new PdfPoint(50, 750), font);
+        page.DrawLine(new PdfPoint(40, 740), new PdfPoint(40, 740), 1D);
+        
+        var yPosition2 = 730;
+        var number2 = 0;
+        foreach (var assignment in assignments.Where(assignment => assignment.Status != AssignmentStatus.InProgress && assignment.DueDate.Year == yearDue))
+        {
+            if (yPosition2 < 50)
+            {
+                page = pdfDocumentBuilder.AddPage(595, 842);
+                yPosition2 = 800;
+            }
+            
+            page.AddText($"{number2}.", 12, new PdfPoint(50, yPosition), font);
+            
+            page.AddText($"{assignment.Volunteer.LastName}, {assignment.Volunteer.FirstName}", 10, new PdfPoint(100, yPosition), font);
+            page.AddText($"{assignment.Status.ToString()}", 10, new PdfPoint(300, yPosition), font);
+            page.AddText($"{assignment.Description.Substring(0, 150)}", 10, new PdfPoint(350, yPosition), font);
+            
+            yPosition2 -= 20;
+            number2++;
+        }
+        
+        page = pdfDocumentBuilder.AddPage(595, 842);
+        
+        page.AddText($"Total number of inactive assignments: {number2}", 16, new PdfPoint(50, 750), font);
+
+        var stream = new MemoryStream(pdfDocumentBuilder.Build());
+
+        return stream;
+    }
+
+    public static MemoryStream GenerateResourcesStatusReport(List<Donation> allDonations, int year)
+    {
+        List<Donation> donations = new List<Donation>();
+        
+        foreach (var donation in allDonations.Where(donation => donation.Date.Year == year))
+        {
+            donations.Add(donation);
+        }
+        
+        using var pdfDocumentBuilder = new PdfDocumentBuilder();
+        var page = pdfDocumentBuilder.AddPage(PageSize.A4);
+
+        var font = pdfDocumentBuilder.AddStandard14Font(Standard14Font.Courier);
+        
+        page.AddText("Finalized material donations:", 16, new PdfPoint(50, 750), font);
+        page.DrawLine(new PdfPoint(40, 740), new PdfPoint(40, 740), 1D);
+
+        var yPosition = 730;
+        var number = 0;
+        foreach (var donation in donations.Where(donation => donation.Type == DonationType.Material && donation.Status != DonationStatus.Pending))
+        {
+            if (yPosition < 50)
+            {
+                page = pdfDocumentBuilder.AddPage(595, 842);
+                yPosition = 800;
+            }
+            
+            page.AddText($"{number}. {donation.Description[..50]}", 10, new PdfPoint(50, yPosition), font);
+            page.AddText($"{donation.Location}, {donation.Status}", 10, new PdfPoint(200, yPosition), font);
+            
+            yPosition -= 20;
+            number++;
+        }
+        
+        page = pdfDocumentBuilder.AddPage(595, 842);
+        
+        page.AddText($"Total number of finalized material donations: {number}", 16, new PdfPoint(50, 750), font);
+        
+        page = pdfDocumentBuilder.AddPage(595, 842);
+        page.AddText("Material donations waiting for collection:", 16, new PdfPoint(50, 750), font);
+        page.DrawLine(new PdfPoint(40, 740), new PdfPoint(40, 740), 1D);
+        
+        var yPosition2 = 730;
+        var number2 = 0;
+        foreach (var donation in donations.Where(donation => donation.Type == DonationType.Material && donation.Status != DonationStatus.Pending))
+        {
+            if (yPosition2 < 50)
+            {
+                page = pdfDocumentBuilder.AddPage(595, 842);
+                yPosition2 = 800;
+            }
+            
+            page.AddText($"{number2}. {donation.Description[..50]}", 10, new PdfPoint(50, yPosition2), font);
+            page.AddText($"{donation.Location}, submitted: {donation.Date.ToString((CultureInfo.InvariantCulture))}", 10, new PdfPoint(200, yPosition2), font);
+            
+            yPosition2 -= 20;
+            number2++;
+        }
+        
+        page = pdfDocumentBuilder.AddPage(595, 842);
+        
+        page.AddText($"Total number of pending material donations: {number2}", 16, new PdfPoint(50, 750), font);
+
+        var received = 0.0;
+        var waiting = 0.0;
+        foreach (var donation in donations.Where(donation => donation.Type == DonationType.Financial))
+        {
+            if (donation.Status != DonationStatus.Accepted) received += donation.Amount;
+            else waiting += donation.Amount;
+        }
+        
+        page = pdfDocumentBuilder.AddPage(595, 842);
+        
+        page.AddText($"Total amount of financial donations received: {received}", 16, new PdfPoint(50, 750), font);
+        page.AddText($"Total amount of financial donations waiting: {waiting}", 16, new PdfPoint(50, 750), font);
+        
+        var stream = new MemoryStream(pdfDocumentBuilder.Build());
+
+        return stream;
+    }
+
+    public static MemoryStream GenerateAffectedIndividualsReport(List<Individual> affectedIndividuals)
+    {
+        using var pdfDocumentBuilder = new PdfDocumentBuilder();
+        var page = pdfDocumentBuilder.AddPage(PageSize.A4);
+
+        var font = pdfDocumentBuilder.AddStandard14Font(Standard14Font.Courier);
+        
+        page.AddText("Affected individuals:", 16, new PdfPoint(50, 750), font);
+
+        var yPosition = 730;
+        var number = 0;
+        foreach (var individual in affectedIndividuals)
+        {
+            if (yPosition < 50)
+            {
+                page = pdfDocumentBuilder.AddPage(595, 842);
+                yPosition = 800;
+            }
+            
+            page.AddText($"{number}. {individual.Name}", 10, new PdfPoint(50, yPosition), font);
+            page.AddText($"{individual.Location}", 10, new PdfPoint(200, yPosition), font);
+            
+            yPosition -= 20;
+            number++;
+        }
+        
+        page.DrawLine(new PdfPoint(40, 740), new PdfPoint(40, 740), 1D);
+        var stream = new MemoryStream(pdfDocumentBuilder.Build());
+
+        return stream;
+    }
+}
+
+public abstract class Individual(string name, string location)
+{
+    public string Name { get; set; } = name;
+    public string Location { get; set; } = location;
 }
