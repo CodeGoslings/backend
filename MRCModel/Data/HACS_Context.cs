@@ -5,6 +5,10 @@ namespace MRCModel.Data
 {
     public class HACS_Context : DbContext
     {
+        public static HACS_Context createContext()
+        {
+            return new HACS_Context();
+        }
         public DbSet<User> Users { get; set; }
         public DbSet<AffectedIndividual> AffectedIndividuals { get; set; }
         public DbSet<AidOrganizationWorker> AidOrganizationWorkers { get; set; }

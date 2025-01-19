@@ -12,7 +12,7 @@ public class MRCService : IMRCService
     private readonly HACS_Context _context;
     public MRCService()
     {
-        databaseManager = new MRC_Repository(_context); // Initialize databaseManager here
+        databaseManager = new MRC_Repository(HACS_Context.createContext()); // Initialize databaseManager here
     }
     public bool createRequest(int requestId, string type, string description, string priority, string location, DateTime submissionDate, string status, string submittedBy)
     {
