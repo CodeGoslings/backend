@@ -1,7 +1,9 @@
 ﻿using HACS.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -47,7 +49,7 @@ namespace HACS.Controllers
             return Ok(new { Status = "Success", Message = "Roles created or already exist." });
         }
 
-        [HttpPost("addRole")]
+        [HttpPost("roles")]
         [Authorize(Roles = "Admin")]
         [SwaggerOperation(
             Summary = "Creates a new role",
@@ -61,26 +63,91 @@ namespace HACS.Controllers
         {
             if (string.IsNullOrWhiteSpace(request.RoleName))
             {
-                return BadRequest(new { Status = "Error", Message = "Role name cannot be empty" });
+                return BadRequest(new { Status = "Error", Message = "Role name cannot be empty." });
             }
 
             if (await _roleManager.RoleExistsAsync(request.RoleName))
             {
-                return BadRequest(new { Status = "Error", Message = "Role already exists" });
+                return BadRequest(new { Status = "Error", Message = "Role already exists." });
             }
 
             var result = await _roleManager.CreateAsync(new IdentityRole(request.RoleName));
 
             if (!result.Succeeded)
             {
-                return BadRequest(new { Status = "Error", Message = "Failed to create role" });
+                return BadRequest(new { Status = "Error", Message = "Failed to create role." });
             }
             return Created($"/api/addRole/{request.RoleName}",
                 new
                 {
                     Status = "Success",
-                    Message = "Role created or already exist."
+                    Message = "Role created."
                 });
+        }
+
+        [HttpPut("roles/{roleId}")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(
+            Summary = "Updates a role name",
+            Description = "Updates an existing role name. Only accessible by administrators."
+        )]
+        [SwaggerResponse(StatusCodes.Status200OK, "Role updated successfully")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid request")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Role not found")]
+        [SwaggerResponse(StatusCodes.Status409Conflict, "Role name conflict")]
+        public async Task<IActionResult> UpdateRole([FromRoute] string roleId, [FromBody] UpdateRoleRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.NewRoleName))
+            {
+                return BadRequest(new { message = "New role name cannot be empty" });
+            }
+
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role == null)
+            {
+                return NotFound(new { message = "Role not found" });
+            }
+
+            if (await _roleManager.RoleExistsAsync(request.NewRoleName))
+            {
+                return Conflict(new { message = "New role name already exists" });
+            }
+
+            role.Name = request.NewRoleName;
+            var result = await _roleManager.UpdateAsync(role);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(new
+                {
+                    message = "Failed to update role",
+                    errors = result.Errors.Select(e => e.Description)
+                });
+            }
+
+            return Ok(new { message = "Role updated successfully" });
+        }
+
+        [HttpGet("roles")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(
+            Summary = "Get all roles",
+            Description = "Retrieves all roles with their IDs. Only accessible by administrators."
+        )]
+        [SwaggerResponse(StatusCodes.Status200OK, "List of roles retrieved successfully")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "User is not authenticated")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "User is not authorized")]
+        public async Task<ActionResult<IEnumerable<RoleModel>>> GetAllRoles()
+        {
+            var roles = await _roleManager.Roles
+                .Select(r => new RoleModel
+                {
+                    Id = r.Id,
+                    Name = r.Name
+                })
+                .ToListAsync();
+
+            return Ok(roles);
         }
 
         [HttpPost("register")]
