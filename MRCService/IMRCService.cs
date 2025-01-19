@@ -1,10 +1,11 @@
 ﻿using System.Text.Json.Nodes;
 namespace MRCService;
 
-public interface IAIService
+public interface IMRCService
 {
-    public static IAIService createService(){
-        return new AIService();
+    public static IMRCService createService()
+    {
+        return new MRCService();
     }
     bool createRequest(int requestId, string type, string description, string priority, string location, DateTime submissionDate, string status, string submittedBy);
     bool updateRequestStatus(int requestId, string requestStatus);

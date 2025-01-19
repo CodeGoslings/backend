@@ -1,11 +1,9 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using MRCService;
+﻿using MRCService;
 using MRCModel;
 using System.ComponentModel;
 using System.Text.Json.Nodes;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("For demonstration purposes");
 
 Request req = new Request(
     requestId: 1,
@@ -23,10 +21,10 @@ var jsonObject = req.ToJsonObject();
 
 Console.WriteLine("Creating two requests and fetching them");
 
-IAIService service = IAIService.createService();
+IMRCService service = IMRCService.createService();
 
-service.createRequest(1,"type", "description", "priority", "location", DateTime.Now, "Pending", "Anna");
-service.createRequest(2,"type", "description", "priority", "location", DateTime.Now, "Pending", "Jeremi");
+service.createRequest(1, "type", "description", "priority", "location", DateTime.Now, "Pending", "Anna");
+service.createRequest(2, "type", "description", "priority", "location", DateTime.Now, "Pending", "Jeremi");
 
 JsonArray requests = service.viewRequests();
 
@@ -40,7 +38,7 @@ foreach (var request in requests)
 
 Console.WriteLine("Changing request status of request 1 to Denied");
 
-service.updateRequestStatus(1,"Denied");
+service.updateRequestStatus(1, "Denied");
 
 requests = service.viewRequests();
 
