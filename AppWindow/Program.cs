@@ -21,7 +21,7 @@ var jsonObject = req.ToJsonObject();
 
 Console.WriteLine("Creating two requests and fetching them");
 
-IMRCService service = IMRCService.createService();
+IMRC_Controller service = IMRC_Controller.createService();
 
 service.createRequest(1, "type", "description", "priority", "location", DateTime.Now, "Pending", "Anna");
 service.createRequest(2, "type", "description", "priority", "location", DateTime.Now, "Pending", "Jeremi");

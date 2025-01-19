@@ -7,13 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../MRCService/MRCService.csproj" />
-  </ItemGroup>
-
 
   <ItemGroup>
-    <ProjectReference Include="../MRCModel/MRCModel.csproj" />
+    <ProjectReference Include="..\HACS\HACS.csproj" />
   </ItemGroup>
 
   <ItemGroup>
