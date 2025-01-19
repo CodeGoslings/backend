@@ -1,15 +1,18 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Nodes;
 using MRCModel;
+using MRCModel.Data;
+using MRCModel.Models;
+using MRCModel.Repositories;
 namespace MRCService;
 
 public class MRCService : IMRCService
 {
     private MRC_Repository databaseManager;
-
+    private readonly HACS_Context _context;
     public MRCService()
     {
-        databaseManager = new DatabaseManager(); // Initialize databaseManager here
+        databaseManager = new MRC_Repository(_context); // Initialize databaseManager here
     }
     public bool createRequest(int requestId, string type, string description, string priority, string location, DateTime submissionDate, string status, string submittedBy)
     {
