@@ -5,9 +5,9 @@ namespace HACS.Mappers;
 
 public static class DonationMapper
 {
-    public static DonationDto Map(this Donation donation)
+    public static GetDonationDto Map(this Donation donation)
     {
-        var donationDto = new DonationDto
+        var donationDto = new GetDonationDto
         {
             Id = donation.Id,
             Type = (int)donation.Type,
@@ -20,9 +20,9 @@ public static class DonationMapper
         return donationDto;
     }
 
-    public static Donation Map(this DonationDto dto)
+    public static Donation Map(this PostDonationDto dto, Guid id = default)
     {
         return new Donation((DonationType)dto.Type, (DonationStatus)dto.Status, dto.Date, dto.Amount,
-            dto.Description, dto.Location, dto.Id);
+            dto.Description, dto.Location, id);
     }
 }

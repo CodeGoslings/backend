@@ -17,9 +17,12 @@ public class DonationRepository(ApplicationDBContext context) : IRepository<Dona
         return await context.Donations.FindAsync(id);
     }
 
-    public async Task<Donation?> CreateAsync(Donation donation, string? attribute = null)
+    public async Task<Donation?> CreateAsync(Donation donation, string? userId = null)
     {
+        var user = await context.Donors.FindAsync(userId);
         await context.Donations.AddAsync(donation);
+        user.DonationHistory.Add(donation);
+        context.Donors.Update(user);
         await context.SaveChangesAsync();
         return donation;
     }

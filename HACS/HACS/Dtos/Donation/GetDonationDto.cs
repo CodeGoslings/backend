@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HACS.Dtos.Donation;
 
-public class DonationDto
+public class GetDonationDto
 {
     public Guid Id { get; set; }
 

@@ -17,10 +17,10 @@ namespace HACS.Controllers;
 public class DonorController : ControllerBase
 {
     private readonly IRepository<Donor> _donorRepo;
-    private readonly UserManager<DonationAdmin> _userManager;
+    private readonly UserManager<Donor> _userManager;
     private readonly IConfiguration _config;
     
-    public DonorController(IConfiguration config, IRepository<Donor> donorRepo, UserManager<DonationAdmin> userManager)
+    public DonorController(IConfiguration config, IRepository<Donor> donorRepo, UserManager<Donor> userManager)
     {
         _donorRepo = donorRepo;
         _userManager = userManager;
