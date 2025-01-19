@@ -14,14 +14,13 @@ namespace MRCModel.Repositories
             _context = context;
         }
 
-       
-
-        // Fetch all Requests
+         // Fetch all Requests
         public List<Request> FetchAllRequests()
         {
             try
             {
-                return _context;
+                List<Request> requestsList = _context.Requests.ToList();
+                return requestsList;
             }
             catch (Exception ex)
             {
@@ -37,7 +36,8 @@ namespace MRCModel.Repositories
             try
             {
                 // Simulating database insert operation
-                _context.Add(request);
+                _context.Requests.Add(request);
+                _context.SaveChanges();
                 return true; // If no exceptions, operation was successful
             }
             catch (Exception ex)
@@ -54,7 +54,7 @@ namespace MRCModel.Repositories
             try
             {
                 // Search the simulated database for the request with the given id
-                var request = _context.FirstOrDefault(r => r.requestId == requestId);
+                var request = _context.Requests.FirstOrDefault(r => r.requestId == requestId);
                 if (request == null)
                 {
                     throw new Exception("Request with such ID not found.");
@@ -103,7 +103,7 @@ namespace MRCModel.Repositories
                 }
 
                 // Remove the request from the simulated database
-                _context.Remove(request);
+                _context.Requests.Remove(request);
                 return true; // Return true to indicate successful deletion
             }
             catch (Exception ex)
@@ -143,7 +143,7 @@ namespace MRCModel.Repositories
             try
             {
                 // Filter requests by the submittedBy field (in this case, userId)
-                var history = _context.Where(r => r.submittedBy == userId).ToList();
+                var history = _context.Requests.Where(r => r.submittedBy == userId).ToList();
                 return history; // Return the filtered list
             }
             catch (Exception ex)

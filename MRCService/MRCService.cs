@@ -1,7 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Nodes;
-using MRCModel.Models;
-using MRCModel.Repositories;
+using MRCModel;
 namespace MRCService;
 
 public class MRCService : IMRCService
