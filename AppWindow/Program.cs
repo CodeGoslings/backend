@@ -1,7 +1,7 @@
 ﻿using MRCService;
-using MRCModel;
 using System.ComponentModel;
 using System.Text.Json.Nodes;
+using MRCModel.Models;
 
 Console.WriteLine("For demonstration purposes");
 

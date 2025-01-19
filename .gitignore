@@ -10,3 +10,4 @@ obj/
 # Ignore other common files
 *.log
 *.tmp
+/.vs/MRCProject/FileContentIndex

@@ -1,0 +1,92 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\annak\\Documents\\GitHub\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DA1105C2-BFC4-4ACF-8DE0-0BC45369A716}|MRCModel\\MRCModel.csproj|c:\\users\\annak\\documents\\github\\backend\\mrcmodel\\mrcmodel.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{DA1105C2-BFC4-4ACF-8DE0-0BC45369A716}|MRCModel\\MRCModel.csproj|solutionrelative:mrcmodel\\mrcmodel.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{861735D8-379F-4CCE-B39D-8801E6A9E725}|Data\\Data.csproj|c:\\users\\annak\\documents\\github\\backend\\data\\hacs_context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{861735D8-379F-4CCE-B39D-8801E6A9E725}|Data\\Data.csproj|solutionrelative:data\\hacs_context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9274D1C9-6AD6-4CF6-BD85-D1904FA02CD1}|AppWindow\\AppWindow.csproj|c:\\users\\annak\\documents\\github\\backend\\appwindow\\appwindow.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{9274D1C9-6AD6-4CF6-BD85-D1904FA02CD1}|AppWindow\\AppWindow.csproj|solutionrelative:appwindow\\appwindow.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA1105C2-BFC4-4ACF-8DE0-0BC45369A716}|MRCModel\\MRCModel.csproj|c:\\users\\annak\\documents\\github\\backend\\mrcmodel\\databasemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA1105C2-BFC4-4ACF-8DE0-0BC45369A716}|MRCModel\\MRCModel.csproj|solutionrelative:mrcmodel\\databasemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MRCModel",
+              "DocumentMoniker": "C:\\Users\\annak\\Documents\\GitHub\\backend\\MRCModel\\MRCModel.csproj",
+              "RelativeDocumentMoniker": "MRCModel\\MRCModel.csproj",
+              "ToolTip": "C:\\Users\\annak\\Documents\\GitHub\\backend\\MRCModel\\MRCModel.csproj",
+              "RelativeToolTip": "MRCModel\\MRCModel.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-19T16:48:40.603Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "HACS_Context.cs",
+              "DocumentMoniker": "C:\\Users\\annak\\Documents\\GitHub\\backend\\Data\\HACS_Context.cs",
+              "RelativeDocumentMoniker": "Data\\HACS_Context.cs",
+              "ToolTip": "C:\\Users\\annak\\Documents\\GitHub\\backend\\Data\\HACS_Context.cs",
+              "RelativeToolTip": "Data\\HACS_Context.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T16:48:53.316Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AppWindow",
+              "DocumentMoniker": "C:\\Users\\annak\\Documents\\GitHub\\backend\\AppWindow\\AppWindow.csproj",
+              "RelativeDocumentMoniker": "AppWindow\\AppWindow.csproj",
+              "ToolTip": "C:\\Users\\annak\\Documents\\GitHub\\backend\\AppWindow\\AppWindow.csproj",
+              "RelativeToolTip": "AppWindow\\AppWindow.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-19T16:31:25.13Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DatabaseManager.cs",
+              "DocumentMoniker": "C:\\Users\\annak\\Documents\\GitHub\\backend\\MRCModel\\DatabaseManager.cs",
+              "RelativeDocumentMoniker": "MRCModel\\DatabaseManager.cs",
+              "ToolTip": "C:\\Users\\annak\\Documents\\GitHub\\backend\\MRCModel\\DatabaseManager.cs",
+              "RelativeToolTip": "MRCModel\\DatabaseManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-13T11:32:50.404Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
