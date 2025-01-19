@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MRCModel.Models;
 
 namespace MRCModel.Data
@@ -17,7 +18,7 @@ namespace MRCModel.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=HACS_database.db");
+            optionsBuilder.UseSqlite("Data Source=C:\\Users\\annak\\Documents\\GitHub\\backend\\MRCModel\\Data\\HACS_database.db");
         }
     }
 }
