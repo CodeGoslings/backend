@@ -37,7 +37,7 @@ namespace HACS.Controllers
         }
 
         [HttpPost("initRoles")]
-        [SwaggerOperation(Summary = "Initialize roles", Description = "Creates Admin, Volunteer, and OrganizationManager roles if they do not exist." +
+        [SwaggerOperation(Summary = "Initialize roles", Description = "Creates roles if they do not exist. " +
             "Ensure that roles are created before registration")]
         [SwaggerResponse(StatusCodes.Status200OK, "Roles created or already exist.")]
         public async Task<IActionResult> InitRoles()
