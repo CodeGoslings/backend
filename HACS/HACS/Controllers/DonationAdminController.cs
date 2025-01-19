@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using HACS.Dtos;
 using HACS.Dtos.DonationAdmin;
-using HACS.Helpers;
 using HACS.Interfaces;
 using HACS.Mappers;
 using HACS.Models;
@@ -101,18 +100,5 @@ public class DonationAdminController : ControllerBase
     {
         await _donationAdminRepo.DeleteAsync(id);
         return NoContent();
-    }
-
-    [HttpGet("donation-report/{year:int}")]
-    public async Task<IActionResult> GetDonationReport(int year)
-    {
-        var donationUser = HttpContext.User;
-        if (donationUser.Identity is null) return Unauthorized();
-        var user = (await _donationAdminRepo.GetAllAsync()).FirstOrDefault(x => x.UserName == donationUser.Identity.Name);
-        if (user == null) return NotFound();
-        
-        var donations = await _donationRepo.GetAllAsync();
-        var file = PdfHelper.GenerateDonationsReport(donations, year);
-        return File(file, "application/pdf", $"Report_{year}.pdf");
     }
 }
