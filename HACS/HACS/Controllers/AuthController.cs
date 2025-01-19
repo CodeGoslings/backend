@@ -1,4 +1,5 @@
-﻿using HACS.Models;
+﻿using HACS.Data;
+using HACS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
@@ -21,15 +22,18 @@ namespace HACS.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDBContext _context;
 
         public AuthController(
             UserManager<IdentityUser> userManager,
             IConfiguration configuration,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDBContext context)
         {
             _userManager = userManager;
             _configuration = configuration;
             _roleManager = roleManager;
+            _context = context;
         }
 
         [HttpPost("initRoles")]
@@ -45,7 +49,19 @@ namespace HACS.Controllers
                 {
                     await _roleManager.CreateAsync(new IdentityRole(role));
                 }
+
+                var existingPerm = await _context.EndpointRolePermissions
+                    .FirstOrDefaultAsync(e => e.Endpoint == "api/Auth/authorizedHelloWorld" && e.Role == role);
+                if (existingPerm == null)
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/Auth/authorizedHelloWorld",
+                        Role = role
+                    });
+                }
             }
+            await _context.SaveChangesAsync();
             return Ok(new { Status = "Success", Message = "Roles created or already exist." });
         }
 
@@ -156,10 +172,9 @@ namespace HACS.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid role or user already exists.")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var validRoles = new[] { "Admin", "Volunteer", "OrganizationManager" };
-            if (!validRoles.Contains(model.Role))
+            if (!await _roleManager.RoleExistsAsync(model.Role))
             {
-                return BadRequest(new { Status = "Error", Message = "Invalid role requested" });
+                return BadRequest(new { message = "There is no such role as specified." });
             }
 
             var userExists = await _userManager.FindByNameAsync(model.Username);
@@ -219,7 +234,7 @@ namespace HACS.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Volunteer,OrganizationManager")]
+        [Authorize(Policy = "api/Auth/authorizedHelloWorld")]
         [Route("authorizedHelloWorld")]
         [SwaggerOperation(Summary = "Authorized HelloWorld", Description = "A test which returns a message if user is authorized.")]
         [SwaggerResponse(StatusCodes.Status200OK, "You are authorized.")]
