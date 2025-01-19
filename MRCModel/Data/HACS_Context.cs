@@ -18,7 +18,17 @@ namespace MRCModel.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=C:\\Users\\annak\\Documents\\GitHub\\backend\\MRCModel\\Data\\HACS_database.db");
+            // Start from the bin directory and move to the root directory
+            var baseDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName;
+
+            // Combine the project root path with the relative path to the database
+            var databasePath = Path.Combine(baseDirectory, "MRCModel", "Data", "HACS_database.db");
+
+
+            Console.WriteLine(databasePath);
+
+            // Ensure the relative path is correct and pass it to UseSqlite
+            optionsBuilder.UseSqlite($"Data Source={databasePath}");
         }
     }
 }
