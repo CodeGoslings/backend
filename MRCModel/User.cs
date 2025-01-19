@@ -1,41 +1,32 @@
-﻿namespace MRCModel
+﻿using System.Text.Json.Nodes;
+namespace MRCModel
+
 {
     public class User
     {
         // Fields
         public string userId { get; set; }
-        private string userName;
-        private string userEmail;
-        private string userPassword;
+        private string userName { get; set; }
+        private string userEmail { get; set; }
+        private string userPassword { get; set; }
 
         // Constructor
         public User(string userId, string userName, string userEmail, string userPassword)
         {
             this.userId = userId;
-            this.UserName = userName;
-            this.UserEmail = userEmail;
-            this.UserPassword = userPassword;
+            this.userName = userName;  // Use the field directly
+            this.userEmail = userEmail;
+            this.userPassword = userPassword;
         }
 
-        // Getter and Setter for userName
-        public string UserName
+        // Method to convert the object to a JSON object
+        public JsonObject ToJsonObject()
         {
-            get { return userName; }
-            set { userName = value; }
-        }
-
-        // Getter and Setter for userEmail
-        public string UserEmail
-        {
-            get { return userEmail; }
-            set { userEmail = value; }
-        }
-
-        // Getter and Setter for userPassword
-        public string UserPassword
-        {
-            get { return userPassword; }
-            set { userPassword = value; }
+            return new JsonObject
+            {
+                { "userId", this.userId },
+                { "userName", this.userName }
+            };
         }
     }
 }

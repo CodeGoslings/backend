@@ -146,5 +146,10 @@ namespace MRCModel
                 return new List<Request>(); // Return an empty list if there's an error
             }
         }
+
+        public List<User> FetchAllUsers()
+        {
+            return null;
+        }
     }
 }

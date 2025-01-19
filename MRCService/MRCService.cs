@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Nodes;
 using MRCModel;
 namespace MRCService;
@@ -173,5 +174,16 @@ public class MRCService : IMRCService
             Console.WriteLine($"Error in getRequestHistory: {ex.Message}");
             throw;
         }
+    }
+
+    public JsonArray getAllUsers()
+    {
+        List<User> users = databaseManager.FetchAllUsers();
+        JsonArray arr = new JsonArray();
+        foreach (var user in users)
+        {
+            arr.Add(user.ToJsonObject());
+        }
+        return arr;
     }
 }
