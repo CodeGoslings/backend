@@ -59,14 +59,13 @@ namespace HACS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("Amount")
+                    b.Property<double?>("Amount")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DonationAdminId")
@@ -76,7 +75,6 @@ namespace HACS.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")

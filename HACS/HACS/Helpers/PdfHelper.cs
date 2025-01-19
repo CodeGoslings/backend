@@ -50,7 +50,7 @@ public static class PdfHelper
 
         var yPosition = 730; // Start just below the header
         var number = 0;
-        var total = 0.0;
+        double? total = 0.0;
         foreach (var donation in donations.Where(donation => donation.Date.Year == year))
         {
             if (yPosition < 50) // If we reach the bottom of the page, add a new one
@@ -209,12 +209,23 @@ public static class PdfHelper
         
         page.AddText($"Total number of pending material donations: {number2}", 16, new PdfPoint(50, 750), font);
 
-        var received = 0.0;
-        var waiting = 0.0;
+        double? received = 0.0;
+        double? waiting = 0.0;
         foreach (var donation in donations.Where(donation => donation.Type == DonationType.Financial))
         {
-            if (donation.Status != DonationStatus.Accepted) received += donation.Amount;
-            else waiting += donation.Amount;
+            switch (donation.Status)
+            {
+                case DonationStatus.Accepted:
+                    received += donation.Amount;
+                    break;
+                case DonationStatus.Pending:
+                    waiting += donation.Amount;
+                    break;
+                case DonationStatus.Declined:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
         
         page = pdfDocumentBuilder.AddPage(595, 842);

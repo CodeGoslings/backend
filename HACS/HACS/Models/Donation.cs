@@ -8,8 +8,8 @@ public class Donation
     {
     }
 
-    public Donation(DonationType type, DonationStatus status, DateTime date, double amount, string description,
-        string location, Guid id = default)
+    public Donation(DonationType type, DonationStatus status, DateTime date, double? amount, string? description,
+        string? location, Guid id = default)
     {
         Id = id;
         Type = type;
@@ -25,9 +25,9 @@ public class Donation
     public DonationType Type { get; set; }
     public DonationStatus Status { get; set; }
     public DateTime Date { get; set; }
-    public double Amount { get; set; }
-    public string Description { get; set; }
-    public string Location { get; set; }
+    public double? Amount { get; set; }
+    public string? Description { get; set; }
+    public string? Location { get; set; }
 }
 
 public enum DonationStatus

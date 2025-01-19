@@ -11,7 +11,7 @@ public class GetDonationDto
     [AllowedValues(0, 1, 2)] public int Status { get; set; }
 
     public DateTime Date { get; set; }
-    public double Amount { get; set; }
-    public string Description { get; set; }
-    public string Location { get; set; }
+    public double? Amount { get; set; }
+    public string? Description { get; set; }
+    public string? Location { get; set; }
 }
