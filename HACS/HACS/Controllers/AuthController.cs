@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -34,7 +36,7 @@ namespace HACS.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, "Roles created or already exist.")]
         public async Task<IActionResult> InitRoles()
         {
-            var roles = new[] { "Admin", "Volunteer", "OrganizationManager" };
+            var roles = new[] { "Admin", "Volunteer", "OrganizationManager", "AffectedIndividual", "GovernmentRepresentative", "Donor" };
             foreach (var role in roles)
             {
                 if (!await _roleManager.RoleExistsAsync(role))
@@ -43,6 +45,42 @@ namespace HACS.Controllers
                 }
             }
             return Ok(new { Status = "Success", Message = "Roles created or already exist." });
+        }
+
+        [HttpPost("addRole")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(
+            Summary = "Creates a new role",
+            Description = "Creates a new role in the system. Only accessible by administrators."
+        )]
+        [SwaggerResponse(StatusCodes.Status201Created, "Role created successfully")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid role name or role already exists")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "User is not authenticated")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "User is not authorized")]
+        public async Task<IActionResult> AddRole([FromBody] CreateRoleRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.RoleName))
+            {
+                return BadRequest(new { Status = "Error", Message = "Role name cannot be empty" });
+            }
+
+            if (await _roleManager.RoleExistsAsync(request.RoleName))
+            {
+                return BadRequest(new { Status = "Error", Message = "Role already exists" });
+            }
+
+            var result = await _roleManager.CreateAsync(new IdentityRole(request.RoleName));
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(new { Status = "Error", Message = "Failed to create role" });
+            }
+            return Created($"/api/addRole/{request.RoleName}",
+                new
+                {
+                    Status = "Success",
+                    Message = "Role created or already exist."
+                });
         }
 
         [HttpPost("register")]
