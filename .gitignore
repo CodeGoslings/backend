@@ -7,6 +7,9 @@ obj/
 *.suo
 *.csproj.user
 
+# Ignore Visual Studio specific files
+.vs/
+
 # Ignore other common files
 *.log
 *.tmp
