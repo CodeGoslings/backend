@@ -13,7 +13,7 @@ public class EmailReader {
 
     public static List<Email> readAppEmails(Gmail service) throws IOException {
         // Query to fetch emails with the specified app prefix
-        String query = "from:me subject:HACS:"; // Adjust as necessary
+        String query = "subject:HACS: (from:me OR to:me)"; // Adjust as necessary
         ListMessagesResponse response = service.users().messages().list("me").setQ(query).execute();
         List<Message> messages = response.getMessages();
         List<Email> emailDetails = new ArrayList<>();
