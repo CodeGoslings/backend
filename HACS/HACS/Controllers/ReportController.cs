@@ -39,10 +39,32 @@ public class ReportController : ControllerBase
     }
     
     [HttpGet("individuals")]
-    public async Task<IActionResult> GetIndividuals(int year)
+    public async Task<IActionResult> GetIndividuals()
     {
         var ind = new List<Individual>();
         var report = PdfHelper.GenerateAffectedIndividualsReport(ind);
-        return File(report, "application/pdf", $"individuals_report_{year}.pdf");
+        return File(report, "application/pdf", $"individuals_report.pdf");
+    }
+    
+    
+    [HttpGet("assignments-live")]
+    public async Task<IActionResult> GetAssignmentsLive()
+    {
+        var ass = await _assignmentRepository.GetAllAsync();
+        return Ok(ass);
+    }
+    
+    [HttpGet("resources-live")]
+    public async Task<IActionResult> GetResourcesLive()
+    {
+        var res = await _donationRepository.GetAllAsync();
+        return Ok(res);
+    }
+    
+    [HttpGet("individuals-live")]
+    public async Task<IActionResult> GetIndividualsLive()
+    {
+        var ind = new List<Individual>();
+        return Ok(ind);
     }
 }
