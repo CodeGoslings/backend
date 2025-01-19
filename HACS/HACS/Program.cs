@@ -16,6 +16,18 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        
+        builder.Services.AddOptions();
+        
+        const string corsPolicyName = "corsPolicy";
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(corsPolicyName, corsPolicyBuilder => corsPolicyBuilder
+                .WithOrigins("http://localhost:5173")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials());
+        });
 
         // Add services to the container.
 
@@ -142,6 +154,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        
+        app.UseCors(corsPolicyName);
 
         app.UseAuthentication();
         app.UseAuthorization();
