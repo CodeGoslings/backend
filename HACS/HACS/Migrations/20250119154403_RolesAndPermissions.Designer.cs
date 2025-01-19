@@ -5,14 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NetTopologySuite.Geometries;
 
 #nullable disable
 
 namespace HACS.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241215121127_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250119154403_RolesAndPermissions")]
+    partial class RolesAndPermissions
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +48,25 @@ namespace HACS.Migrations
                     b.HasIndex("VolunteerId");
 
                     b.ToTable("Assignments");
+                });
+
+            modelBuilder.Entity("HACS.Models.EndpointRolePermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Endpoint")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EndpointRolePermissions");
                 });
 
             modelBuilder.Entity("HACS.Models.Organization", b =>
@@ -84,6 +104,11 @@ namespace HACS.Migrations
 
                     b.Property<float>("Amount")
                         .HasColumnType("REAL");
+
+                    b.Property<Point>("Location")
+                        .IsRequired()
+                        .HasColumnType("POINT")
+                        .HasAnnotation("Sqlite:Srid", 4326);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -128,15 +153,27 @@ namespace HACS.Migrations
 
             modelBuilder.Entity("HACS.Models.VolunteerContract", b =>
                 {
-                    b.Property<int>("VolunteerId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("From")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("OrganizationId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("VolunteerId", "OrganizationId");
+                    b.Property<DateTime>("To")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("VolunteerId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("OrganizationId");
+
+                    b.HasIndex("VolunteerId");
 
                     b.ToTable("VolunteerContracts");
                 });

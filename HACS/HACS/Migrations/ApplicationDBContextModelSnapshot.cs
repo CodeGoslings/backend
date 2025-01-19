@@ -47,6 +47,25 @@ namespace HACS.Migrations
                     b.ToTable("Assignments");
                 });
 
+            modelBuilder.Entity("HACS.Models.EndpointRolePermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Endpoint")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EndpointRolePermissions");
+                });
+
             modelBuilder.Entity("HACS.Models.Organization", b =>
                 {
                     b.Property<int>("Id")
