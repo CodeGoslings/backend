@@ -15,7 +15,7 @@ namespace HACS.Controllers
 
     [Route("api/volunteer")]
     [ApiController]
-    [Authorize(Roles = "Admin,Volunteer,OrganizationManager")]
+    [Authorize(Policy = "api/volunteer")]
     public class VolunteerController : ControllerBase
     {
         private readonly ApplicationDBContext _context;

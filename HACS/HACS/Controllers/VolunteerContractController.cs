@@ -12,7 +12,7 @@ namespace HACS.Controllers
 {
     [Route("api/volunteer-contract")]
     [ApiController]
-    [Authorize(Roles = "Admin,Volunteer,OrganizationManager")]
+    [Authorize(Policy = "api/volunteer-contract")]
     public class VolunteerContractController : ControllerBase
     {
         private readonly IVolunteerRepository _volunteerRepo;

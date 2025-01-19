@@ -1,9 +1,14 @@
-﻿using HACS.Models;
+﻿using HACS.Data;
+using HACS.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,15 +22,18 @@ namespace HACS.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDBContext _context;
 
         public AuthController(
             UserManager<IdentityUser> userManager,
             IConfiguration configuration,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDBContext context)
         {
             _userManager = userManager;
             _configuration = configuration;
             _roleManager = roleManager;
+            _context = context;
         }
 
         [HttpPost("initRoles")]
@@ -34,15 +42,183 @@ namespace HACS.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, "Roles created or already exist.")]
         public async Task<IActionResult> InitRoles()
         {
-            var roles = new[] { "Admin", "Volunteer", "OrganizationManager" };
+            var roles = new[] { "Admin", "Volunteer", "OrganizationManager", "AffectedIndividual", "GovernmentRepresentative", "Donor" };
             foreach (var role in roles)
             {
                 if (!await _roleManager.RoleExistsAsync(role))
                 {
                     await _roleManager.CreateAsync(new IdentityRole(role));
                 }
+
+                var existingPerm = await _context.EndpointRolePermissions
+                    .FirstOrDefaultAsync(e => e.Endpoint == "api/Auth/authorizedHelloWorld" && e.Role == role);
+                if (existingPerm == null)
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/Auth/authorizedHelloWorld",
+                        Role = role
+                    });
+                }
+
+                existingPerm = await _context.EndpointRolePermissions
+                   .FirstOrDefaultAsync(e => e.Endpoint == "api/volunteer" && e.Role == role);
+                if (existingPerm == null && (role == "Volunteer" || role == "OrganizationManager"))
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/volunteer",
+                        Role = role
+                    });
+                }
+
+                existingPerm = await _context.EndpointRolePermissions
+                   .FirstOrDefaultAsync(e => e.Endpoint == "api/volunteer-contract" && e.Role == role);
+                if (existingPerm == null && (role == "Volunteer" || role == "OrganizationManager"))
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/volunteer-contract",
+                        Role = role
+                    });
+                }
+
+                existingPerm = await _context.EndpointRolePermissions
+                   .FirstOrDefaultAsync(e => e.Endpoint == "api/resource" && e.Role == role);
+                if (existingPerm == null && role == "OrganizationManager")
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/resource",
+                        Role = role
+                    });
+                }
+
+                existingPerm = await _context.EndpointRolePermissions
+                   .FirstOrDefaultAsync(e => e.Endpoint == "api/organization" && e.Role == role);
+                if (existingPerm == null && role == "OrganizationManager")
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/organization",
+                        Role = role
+                    });
+                }
+
+                existingPerm = await _context.EndpointRolePermissions
+                   .FirstOrDefaultAsync(e => e.Endpoint == "api/assignment" && e.Role == role);
+                if (existingPerm == null && role == "OrganizationManager")
+                {
+                    _context.EndpointRolePermissions.Add(new EndpointRolePermission
+                    {
+                        Endpoint = "api/assignment",
+                        Role = role
+                    });
+                }
             }
+            await _context.SaveChangesAsync();
             return Ok(new { Status = "Success", Message = "Roles created or already exist." });
+        }
+
+        [HttpPost("roles")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(
+            Summary = "Creates a new role",
+            Description = "Creates a new role in the system. Only accessible by administrators."
+        )]
+        [SwaggerResponse(StatusCodes.Status201Created, "Role created successfully")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid role name or role already exists")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "User is not authenticated")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "User is not authorized")]
+        public async Task<IActionResult> AddRole([FromBody] CreateRoleRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.RoleName))
+            {
+                return BadRequest(new { Status = "Error", Message = "Role name cannot be empty." });
+            }
+
+            if (await _roleManager.RoleExistsAsync(request.RoleName))
+            {
+                return BadRequest(new { Status = "Error", Message = "Role already exists." });
+            }
+
+            var result = await _roleManager.CreateAsync(new IdentityRole(request.RoleName));
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(new { Status = "Error", Message = "Failed to create role." });
+            }
+            return Created($"/api/addRole/{request.RoleName}",
+                new
+                {
+                    Status = "Success",
+                    Message = "Role created."
+                });
+        }
+
+        [HttpPut("roles/{roleId}")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(
+            Summary = "Updates a role name",
+            Description = "Updates an existing role name. Only accessible by administrators."
+        )]
+        [SwaggerResponse(StatusCodes.Status200OK, "Role updated successfully")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid request")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Role not found")]
+        [SwaggerResponse(StatusCodes.Status409Conflict, "Role name conflict")]
+        public async Task<IActionResult> UpdateRole([FromRoute] string roleId, [FromBody] UpdateRoleRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.NewRoleName))
+            {
+                return BadRequest(new { message = "New role name cannot be empty" });
+            }
+
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role == null)
+            {
+                return NotFound(new { message = "Role not found" });
+            }
+
+            if (await _roleManager.RoleExistsAsync(request.NewRoleName))
+            {
+                return Conflict(new { message = "New role name already exists" });
+            }
+
+            role.Name = request.NewRoleName;
+            var result = await _roleManager.UpdateAsync(role);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(new
+                {
+                    message = "Failed to update role",
+                    errors = result.Errors.Select(e => e.Description)
+                });
+            }
+
+            return Ok(new { message = "Role updated successfully" });
+        }
+
+        [HttpGet("roles")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(
+            Summary = "Get all roles",
+            Description = "Retrieves all roles with their IDs. Only accessible by administrators."
+        )]
+        [SwaggerResponse(StatusCodes.Status200OK, "List of roles retrieved successfully")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "User is not authenticated")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "User is not authorized")]
+        public async Task<ActionResult<IEnumerable<RoleModel>>> GetAllRoles()
+        {
+            var roles = await _roleManager.Roles
+                .Select(r => new RoleModel
+                {
+                    Id = r.Id,
+                    Name = r.Name
+                })
+                .ToListAsync();
+
+            return Ok(roles);
         }
 
         [HttpPost("register")]
@@ -51,10 +227,9 @@ namespace HACS.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid role or user already exists.")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var validRoles = new[] { "Admin", "Volunteer", "OrganizationManager" };
-            if (!validRoles.Contains(model.Role))
+            if (!await _roleManager.RoleExistsAsync(model.Role))
             {
-                return BadRequest(new { Status = "Error", Message = "Invalid role requested" });
+                return BadRequest(new { message = "There is no such role as specified." });
             }
 
             var userExists = await _userManager.FindByNameAsync(model.Username);
@@ -114,7 +289,7 @@ namespace HACS.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Volunteer,OrganizationManager")]
+        [Authorize(Policy = "api/Auth/authorizedHelloWorld")]
         [Route("authorizedHelloWorld")]
         [SwaggerOperation(Summary = "Authorized HelloWorld", Description = "A test which returns a message if user is authorized.")]
         [SwaggerResponse(StatusCodes.Status200OK, "You are authorized.")]

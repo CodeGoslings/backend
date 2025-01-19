@@ -21,6 +21,7 @@ namespace HACS.Data
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<VolunteerContract> VolunteerContracts { get; set; }
         public DbSet<Resource> Resources { get; set; }
+        public DbSet<EndpointRolePermission> EndpointRolePermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

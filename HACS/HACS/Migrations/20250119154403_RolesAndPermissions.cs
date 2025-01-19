@@ -1,16 +1,20 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using NetTopologySuite.Geometries;
 
 #nullable disable
 
 namespace HACS.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class RolesAndPermissions : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Sqlite:InitSpatialMetaData", true);
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -48,6 +52,20 @@ namespace HACS.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EndpointRolePermissions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Endpoint = table.Column<string>(type: "TEXT", nullable: false),
+                    Role = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EndpointRolePermissions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -196,7 +214,9 @@ namespace HACS.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Amount = table.Column<float>(type: "REAL", nullable: false),
                     Unit = table.Column<string>(type: "TEXT", nullable: false),
-                    OrganizationId = table.Column<int>(type: "INTEGER", nullable: false)
+                    OrganizationId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Location = table.Column<Point>(type: "POINT", nullable: false)
+                        .Annotation("Sqlite:Srid", 4326)
                 },
                 constraints: table =>
                 {
@@ -236,12 +256,16 @@ namespace HACS.Migrations
                 name: "VolunteerContracts",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     VolunteerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    OrganizationId = table.Column<int>(type: "INTEGER", nullable: false)
+                    OrganizationId = table.Column<int>(type: "INTEGER", nullable: false),
+                    From = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    To = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VolunteerContracts", x => new { x.VolunteerId, x.OrganizationId });
+                    table.PrimaryKey("PK_VolunteerContracts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_VolunteerContracts_Organizations_OrganizationId",
                         column: x => x.OrganizationId,
@@ -307,6 +331,11 @@ namespace HACS.Migrations
                 name: "IX_VolunteerContracts_OrganizationId",
                 table: "VolunteerContracts",
                 column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VolunteerContracts_VolunteerId",
+                table: "VolunteerContracts",
+                column: "VolunteerId");
         }
 
         /// <inheritdoc />
@@ -329,6 +358,9 @@ namespace HACS.Migrations
 
             migrationBuilder.DropTable(
                 name: "Assignments");
+
+            migrationBuilder.DropTable(
+                name: "EndpointRolePermissions");
 
             migrationBuilder.DropTable(
                 name: "Resources");
