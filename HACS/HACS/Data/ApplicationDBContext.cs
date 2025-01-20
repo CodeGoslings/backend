@@ -21,7 +21,7 @@ public class ApplicationDBContext : IdentityDbContext<User>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            "Server=192.168.68.114;Database=hacs;User Id=SA;Password=SqlServer1;TrustServerCertificate=True;Encrypt=false;");
+            "Server=localhost;Database=hacs;User Id=SA;Password=SqlServer1;TrustServerCertificate=True;Encrypt=false;");
     }
     
     public DbSet<Assignment> Assignments { get; set; }

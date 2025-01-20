@@ -50,7 +50,7 @@ public static class PdfHelper
         page.DrawLine(new PdfPoint(40, 740), new PdfPoint(40, 740), 1D);
 
         var yPosition = 730; // Start just below the header
-        var number = 0;
+        var number = 1;
         double? total = 0.0;
         foreach (var donation in donations.Where(donation => donation.Date.Year == year))
         {
@@ -90,7 +90,7 @@ public static class PdfHelper
         page.DrawLine(new PdfPoint(40, 740), new PdfPoint(40, 740), 1D);
         
         var yPosition = 730;
-        var number = 0;
+        var number = 1;
         foreach (var assignment in assignments.Where(assignment => assignment.Status == AssignmentStatus.InProgress))
         {
             if (yPosition < 50)
@@ -119,7 +119,7 @@ public static class PdfHelper
         page.DrawLine(new PdfPoint(40, 740), new PdfPoint(40, 740), 1D);
         
         var yPosition2 = 730;
-        var number2 = 0;
+        var number2 = 1;
         foreach (var assignment in assignments.Where(assignment => assignment.Status != AssignmentStatus.InProgress && assignment.DueDate.Year == yearDue))
         {
             if (yPosition2 < 50)
@@ -165,7 +165,7 @@ public static class PdfHelper
         page.DrawLine(new PdfPoint(40, 740), new PdfPoint(40, 740), 1D);
 
         var yPosition = 730;
-        var number = 0;
+        var number = 1;
         foreach (var donation in donations.Where(donation => donation.Type == DonationType.Material && donation.Status != DonationStatus.Pending))
         {
             if (yPosition < 50)
@@ -191,7 +191,7 @@ public static class PdfHelper
         page.DrawLine(new PdfPoint(40, 740), new PdfPoint(40, 740), 1D);
         
         var yPosition2 = 730;
-        var number2 = 0;
+        var number2 = 1;
         foreach (var donation in donations.Where(donation => donation.Type == DonationType.Material && donation.Status != DonationStatus.Pending))
         {
             if (yPosition2 < 50)
@@ -251,7 +251,7 @@ public static class PdfHelper
         page.AddText("Affected individuals:", 16, new PdfPoint(50, 750), font);
 
         var yPosition = 730;
-        var number = 0;
+        var number = 1;
         foreach (var individual in affectedIndividuals)
         {
             if (yPosition < 50)
