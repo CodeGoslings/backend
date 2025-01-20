@@ -6,6 +6,7 @@ using HACS.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MRCModel.Models;
 
 namespace HACS.Data;
 
@@ -15,6 +16,7 @@ public class ApplicationDBContext : IdentityDbContext<User>
     public DbSet<Donation> Donations { get; set; }
     public DbSet<Donor> Donors { get; set; }
     public DbSet<DonationAdmin> DonationAdmins { get; set; }
+    public DbSet<AffectedIndividual> AffectedIndividuals { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

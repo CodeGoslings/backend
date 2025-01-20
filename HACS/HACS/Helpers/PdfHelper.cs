@@ -173,8 +173,9 @@ public static class PdfHelper
                 page = pdfDocumentBuilder.AddPage(595, 842);
                 yPosition = 800;
             }
-            
-            page.AddText($"{number}. {donation.Description[..50]}", 10, new PdfPoint(50, yPosition), font);
+
+            var length = donation.Description.Length > 50 ? 50 : donation.Description.Length;
+            page.AddText($"{number}. {donation.Description[..length]}", 10, new PdfPoint(50, yPosition), font);
             page.AddText($"{donation.Location}, {donation.Status}", 10, new PdfPoint(200, yPosition), font);
             
             yPosition -= 20;
@@ -199,7 +200,8 @@ public static class PdfHelper
                 yPosition2 = 800;
             }
             
-            page.AddText($"{number2}. {donation.Description[..50]}", 10, new PdfPoint(50, yPosition2), font);
+            var length = donation.Description.Length > 50 ? 50 : donation.Description.Length;
+            page.AddText($"{number2}. {donation.Description[..length]}", 10, new PdfPoint(50, yPosition2), font);
             page.AddText($"{donation.Location}, submitted: {donation.Date.ToString((CultureInfo.InvariantCulture))}", 10, new PdfPoint(200, yPosition2), font);
             
             yPosition2 -= 20;
@@ -258,7 +260,7 @@ public static class PdfHelper
                 yPosition = 800;
             }
             
-            page.AddText($"{number}. {individual.Name}", 10, new PdfPoint(50, yPosition), font);
+            page.AddText($"{number}. {individual.GetFullName()}", 10, new PdfPoint(50, yPosition), font);
             page.AddText($"{individual.userLocation}", 10, new PdfPoint(200, yPosition), font);
             
             yPosition -= 20;

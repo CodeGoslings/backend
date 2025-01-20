@@ -17,8 +17,4 @@ public class AffectedIndividual : User, IAffectedIndividual
         this.userContactInfo = userContactInfo;
     }
     public AffectedIndividual() { }
-    public string DisplayableId { get; }
-    public string Name { get; }
-    public string IdentityProvider { get; }
-    public string Identifier { get; }
 }

@@ -7,8 +7,7 @@ using Microsoft.Identity.Client;
 
 namespace Interfaces
 {
-    [Obsolete("Obsolete")]
-    public interface IAffectedIndividual : IUser
+    public interface IAffectedIndividual
     {
         string userLocation { get; set; }
         string userContactInfo { get; set; }

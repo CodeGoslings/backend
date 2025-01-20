@@ -1,8 +1,10 @@
 using HACS.Data;
 using HACS.Helpers;
 using HACS.Interfaces;
+using HACS.Mappers;
 using HACS.Models;
 using Microsoft.AspNetCore.Mvc;
+using MRCModel.Models;
 
 namespace HACS.Controllers;
 
@@ -41,9 +43,9 @@ public class ReportController : ControllerBase
     [HttpGet("individuals")]
     public async Task<IActionResult> GetIndividuals()
     {
-        var ind = new List<Individual>();
+        var ind = new List<AffectedIndividual>();
         var report = PdfHelper.GenerateAffectedIndividualsReport(ind);
-        return File(report, "application/pdf", $"individuals_report.pdf");
+        return File(report, "application/pdf", "individuals_report.pdf");
     }
     
     
@@ -58,13 +60,14 @@ public class ReportController : ControllerBase
     public async Task<IActionResult> GetResourcesLive()
     {
         var res = await _donationRepository.GetAllAsync();
-        return Ok(res);
+        return Ok(res.Select(x => x.Map()));
     }
     
     [HttpGet("individuals-live")]
     public async Task<IActionResult> GetIndividualsLive()
     {
-        var ind = new List<Individual>();
+        var ind = new List<AffectedIndividual>();
+        ind.Add(new AffectedIndividual());
         return Ok(ind);
     }
 }

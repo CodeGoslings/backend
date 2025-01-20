@@ -33,9 +33,7 @@ public class DonationController : ControllerBase
         var donor = (await _donorRepo.GetAllAsync()).FirstOrDefault(x => x.UserName == donationUser.Identity.Name);
         if (donationAdmin is null && donor is null) return NotFound();
         if (donationAdmin is not null && donor is not null) return BadRequest();
-        List<Donation> donations;
-        if (donor is not null) donations = donor.DonationHistory;
-        else donations = await _donationRepo.GetAllAsync();
+        var donations = donor is not null ? donor.DonationHistory : (await _donationRepo.GetAllAsync()).Where(x => x.Status == DonationStatus.Pending).ToList();
         var donationDto = donations.Select(donation => donation.Map());
         return Ok(donationDto);
     }
@@ -73,7 +71,7 @@ public class DonationController : ControllerBase
         if (user == null) return NotFound();
         var donation = donationDto.Map(id);
         await _donationRepo.UpdateAsync(donation);
-        user.ReviewedDonations.Add(donation);
+        // user.ReviewedDonations.Add(donation);
         await _donationAdminRepo.UpdateAsync(user);
         return NoContent();
     }
